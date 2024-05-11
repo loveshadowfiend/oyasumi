@@ -15,8 +15,6 @@ export default async function PopularManga() {
     );
     const data = await response.json();
 
-    console.log(await data.data[0]);
-
     return (
         <div>
             <Card>
@@ -29,6 +27,7 @@ export default async function PopularManga() {
                             const mangaId = element.id;
                             const mangaTitle =
                                 element.attributes.title.en ??
+                                element.attributes.title["ja-ro"] ??
                                 element.attributes.title.ja;
                             const coverFileName = element.relationships.filter(
                                 (rel: { type: string }) => {
@@ -36,6 +35,8 @@ export default async function PopularManga() {
                                 }
                             )[0].attributes?.fileName;
                             const coverUrl = `https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}.512.jpg`;
+
+                            console.log(element.attributes);
 
                             return (
                                 <div
