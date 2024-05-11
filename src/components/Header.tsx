@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Input } from "./ui/input";
-import { Search } from "lucide-react";
+import { Search } from "@/components/Search";
 
 export default function Header() {
     return (
@@ -9,7 +9,7 @@ export default function Header() {
                 <span className="text-4xl font-bold">oyasumi</span>
             </Link>
             <div className="flex flex-row items-center gap-4">
-                <Input className="w-[300px]" placeholder="search" />
+                <Search />
             </div>
         </header>
     );
