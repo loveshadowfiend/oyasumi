@@ -4,7 +4,7 @@ import { Search } from "@/components/Search";
 
 export default function Header() {
     return (
-        <header className="flex flex-row items-center justify-between h-[100px] mb-10">
+        <header className="flex flex-row items-center justify-between h-[100px] mb-5">
             <Link href="/">
                 <span className="text-4xl font-bold">oyasumi</span>
             </Link>

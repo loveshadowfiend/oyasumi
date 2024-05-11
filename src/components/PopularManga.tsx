@@ -36,8 +36,6 @@ export default async function PopularManga() {
                             )[0].attributes?.fileName;
                             const coverUrl = `https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}.512.jpg`;
 
-                            console.log(element.attributes);
-
                             return (
                                 <div
                                     className="flex flex-col gap-1"
