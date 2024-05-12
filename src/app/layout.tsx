@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import QueryProvider from "@/components/tanstack/QueryProvider";
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -25,12 +26,14 @@ export default function RootLayout({
         <html lang="en">
             <body
                 className={cn(
-                    "min-h-screen bg-background font-sans antialiased px-[100px]",
+                    "min-h-screen bg-background font-sans antialiased px-[100px] dark",
                     fontSans.variable
                 )}
             >
-                <Header />
-                {children}
+                <QueryProvider>
+                    <Header />
+                    {children}
+                </QueryProvider>
             </body>
         </html>
     );

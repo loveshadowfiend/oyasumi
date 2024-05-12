@@ -1,10 +1,10 @@
-import PopularManga from "@/components/PopularManga";
+import RecentlyUpdated from "@/components/RecentlyUpdated";
 import { Input } from "@/components/ui/input";
 
 export default function Home() {
     return (
         <main>
-            <PopularManga />
+            <RecentlyUpdated />
         </main>
     );
 }

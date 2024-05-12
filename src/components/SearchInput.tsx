@@ -5,7 +5,7 @@ import { Input } from "./ui/input";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export const Search = () => {
+export const SearchInput = () => {
     const router = useRouter();
     const [input, setInput] = useState("");
     const { fetchSubmit, updateFetchSubmit } = useSearchStore();

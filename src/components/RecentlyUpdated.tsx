@@ -1,28 +1,26 @@
 import Image from "next/image";
 
 import { Card, CardContent } from "@/components/ui/card";
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel";
+import Link from "next/link";
 
-export default async function PopularManga() {
+export default async function RecentlyUpdated() {
     const response = await fetch(
-        "https://api.mangadex.org/manga?order[followedCount]=desc&limit=5&includes[]=cover_art"
+        `https://api.mangadex.org/manga?order[createdAt]=desc&limit=6&includes[]=cover_art`,
+        {
+            cache: "no-store",
+        }
     );
     const data = await response.json();
+    console.log(response);
 
     return (
         <div>
             <Card>
                 <CardContent className="p-5">
                     <h3 className="font-semibold text-lg pb-3">
-                        Popular Manga
+                        Recently Updated Titles
                     </h3>
-                    <div className="grid grid-cols-5 w-full gap-3">
+                    <div className="grid grid-cols-6 w-full gap-3">
                         {data.data.map((element, index) => {
                             const mangaId = element.id;
                             const mangaTitle =
@@ -37,21 +35,21 @@ export default async function PopularManga() {
                             const coverUrl = `https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}.512.jpg`;
 
                             return (
-                                <div
-                                    className="flex flex-col gap-1"
-                                    key={index}
-                                >
-                                    <Image
-                                        className="object-cover h-[350px] w-[256px] rounded-md"
-                                        src={coverUrl}
-                                        alt={`${mangaTitle} cover`}
-                                        width={256}
-                                        height={400}
-                                    />
-                                    <p className="text-[14px] font-medium">
-                                        {mangaTitle}
-                                    </p>
-                                </div>
+                                <Link key={index} href={`manga/${mangaId}`}>
+                                    <div className="flex flex-col gap-1">
+                                        <Image
+                                            className="object-cover w-[200px] h-[255px] rounded-md"
+                                            src={coverUrl}
+                                            alt={`${mangaTitle} cover`}
+                                            width={200}
+                                            height={255}
+                                            objectFit="cover"
+                                        />
+                                        <p className="text-[14px] font-medium">
+                                            {mangaTitle}
+                                        </p>
+                                    </div>
+                                </Link>
                             );
                         })}
                     </div>
