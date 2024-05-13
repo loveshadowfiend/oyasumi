@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
+import { ChaptersFeed } from "@/components/ChaptersFeed";
 
 export default async function MangaPage({
     params,
@@ -77,6 +78,9 @@ export default async function MangaPage({
                     <p className="text-justify">
                         {mangaData.data.attributes.description.en}
                     </p>
+                </div>
+                <div>
+                    <ChaptersFeed mangaID={params.id} />
                 </div>
             </div>
         </main>
