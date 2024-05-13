@@ -46,7 +46,10 @@ export default async function RecentlyUpdated() {
                                             objectFit="cover"
                                         />
                                         <p className="text-[14px] font-medium">
-                                            {mangaTitle}
+                                            {`${mangaTitle.substr(0, 50)}` +
+                                                (mangaTitle.length > 50
+                                                    ? "..."
+                                                    : "")}
                                         </p>
                                     </div>
                                 </Link>
