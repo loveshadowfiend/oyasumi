@@ -18,6 +18,7 @@ export const SearchInput = () => {
 
     return (
         <form
+            className="hidden md:block"
             onSubmit={(e) => {
                 e.preventDefault();
 

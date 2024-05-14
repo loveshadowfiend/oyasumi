@@ -26,14 +26,11 @@ export default function RootLayout({
         <html lang="en">
             <body
                 className={cn(
-                    "min-h-screen bg-background font-sans antialiased px-[100px] dark pb-5",
+                    "min-h-screen bg-background font-sans antialiased dark",
                     fontSans.variable
                 )}
             >
-                <QueryProvider>
-                    <Header />
-                    {children}
-                </QueryProvider>
+                <QueryProvider>{children}</QueryProvider>
             </body>
         </html>
     );

@@ -20,7 +20,7 @@ export default async function RecentlyUpdated() {
                     <h3 className="font-semibold text-lg pb-3">
                         Recently Updated Titles
                     </h3>
-                    <div className="grid grid-cols-6 w-full gap-3">
+                    <div className="grid grid-cols-2 w-full gap-3 md:grid-cols-6">
                         {data.data.map((element, index) => {
                             const mangaId = element.id;
                             const mangaTitle =
