@@ -21,13 +21,13 @@ export default async function RecentlyUpdated() {
                         Recently Updated Titles
                     </h3>
                     <div className="grid grid-cols-2 w-full gap-3 md:grid-cols-6">
-                        {data.data.map((element, index) => {
-                            const mangaId = element.id;
+                        {data.data.map((manga, index) => {
+                            const mangaId = manga.id;
                             const mangaTitle =
-                                element.attributes.title.en ??
-                                element.attributes.title["ja-ro"] ??
-                                element.attributes.title.ja;
-                            const coverFileName = element.relationships.filter(
+                                manga.attributes.title.en ??
+                                manga.attributes.title["ja-ro"] ??
+                                manga.attributes.title.ja;
+                            const coverFileName = manga.relationships.filter(
                                 (rel: { type: string }) => {
                                     return rel.type == "cover_art";
                                 }

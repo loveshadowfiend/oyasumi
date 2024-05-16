@@ -48,13 +48,13 @@ export default function SearchResults() {
         <main className="overflow-auto">
             <div className="flex flex-col gap-3">
                 {searchData !== undefined &&
-                    searchData.data.map((element, index) => {
-                        const mangaId = element.id;
+                    searchData.data.map((manga, index) => {
+                        const mangaId = manga.id;
                         const mangaTitle =
-                            element.attributes.title.en ??
-                            element.attributes.title["ja-ro"] ??
-                            element.attributes.title.ja;
-                        const coverFileName = element.relationships.filter(
+                            manga.attributes.title.en ??
+                            manga.attributes.title["ja-ro"] ??
+                            manga.attributes.title.ja;
+                        const coverFileName = manga.relationships.filter(
                             (rel: { type: string }) => {
                                 return rel.type == "cover_art";
                             }
@@ -78,8 +78,8 @@ export default function SearchResults() {
                                             </h3>
                                             <p className="text-justify">
                                                 {
-                                                    element.attributes
-                                                        .description.en
+                                                    manga.attributes.description
+                                                        .en
                                                 }
                                             </p>
                                         </div>
