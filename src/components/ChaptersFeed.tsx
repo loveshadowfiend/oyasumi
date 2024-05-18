@@ -35,13 +35,6 @@ const fetchFeed = async (
     return data;
 };
 
-const fetchAtHome = async (chapterID: string) => {
-    const response = await fetch(
-        `https://api.mangadex.org/at-home/server/${chapterID}`
-    );
-    const data = await response.json();
-};
-
 export const ChaptersFeed = (props: ChaptersFeedProps) => {
     const [orderChapter, setOrderChapter] = useState<"asc" | "desc">("desc");
     const [page, setPage] = useState(0);
@@ -105,16 +98,16 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
                 </TableCaption>
                 <TableBody>
                     {feedData !== undefined &&
-                        feedData.data.map((element, index) => {
+                        feedData.data.map((chapter, index) => {
                             return (
                                 <TableRow
                                     key={index}
-                                    onClick={() => {
-                                        router.push(`/chapter/${element.id}`);
-                                    }}
+                                    className="cursor-pointer"
                                 >
-                                    <TableCell className="w-full">{`Chapter ${element.attributes.chapter}`}</TableCell>
-                                    <TableCell className="text-center">{`${element.attributes.translatedLanguage}`}</TableCell>
+                                    <Link href={`/chapter/${chapter.id}/1`}>
+                                        <TableCell className="w-full">{`Chapter ${chapter.attributes.chapter}`}</TableCell>
+                                        <TableCell className="text-center">{`${chapter.attributes.translatedLanguage}`}</TableCell>
+                                    </Link>
                                 </TableRow>
                             );
                         })}

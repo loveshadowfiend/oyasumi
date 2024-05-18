@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { Input } from "./ui/input";
 import { SearchInput } from "@/components/SearchInput";
+import { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 
-export default function Header() {
+export default function Header({ className }: ComponentProps<"div">) {
     return (
-        <header className="flex flex-row items-center justify-between h-[100px] mb-5">
+        <header
+            className={cn(
+                "flex flex-row items-center justify-between h-[100px] mb-5",
+                className
+            )}
+        >
             <Link href="/">
                 <span className="text-4xl font-bold">oyasumi</span>
             </Link>

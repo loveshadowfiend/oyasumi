@@ -1,12 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const fetchAtHome = async (chapterID: string) => {
@@ -62,7 +61,7 @@ export default function ChapterPage({
     const [aggregate, setAggregate] = useState<[]>([]);
     const [aggregateIndex, setAggregateIndex] = useState<number>(-1);
 
-    const router = useRouter();
+    const ref = useRef(null);
 
     const { data: atHomeData } = useQuery({
         enabled: !!params.id,
@@ -98,11 +97,15 @@ export default function ChapterPage({
     //     }, 1500);
     // }, [page]);
 
-    console.log(nextChapterID);
-
     useEffect(() => {
         setPage(params.page - 1);
     }, []);
+
+    useEffect(() => {
+        if (ref === null) return;
+
+        window.scrollTo({ top: ref.current.offsetTop });
+    }, [ref]);
 
     // get manga id
     useEffect(() => {
@@ -160,17 +163,16 @@ export default function ChapterPage({
         const next = aggregate[aggregateIndex + 1];
         const prev = aggregate[aggregateIndex - 1];
 
-        setNextChapterID(prev ? next.chapterID : "");
-        setPreviousChapterID(next ? prev.chapterID : "");
+        setNextChapterID(next ? next.chapterID : "");
+        setPreviousChapterID(prev ? prev.chapterID : "");
     }, [aggregateIndex]);
 
     return (
-        <div className="w-screen h-screen">
-            {/* previous page area */}
+        <div className="w-screen h-screen" ref={ref}>
             <Link
                 href={
-                    previousChapterID
-                        ? `/chapter/${previousChapterID}`
+                    previousChapterID !== ""
+                        ? `/chapter/${previousChapterID}/1`
                         : `/manga/${mangaID}`
                 }
                 className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
@@ -183,7 +185,7 @@ export default function ChapterPage({
                     window.history.pushState(null, ``, `${page}`);
                 }}
             ></Link>
-            {/* next page area */}
+
             <Link
                 href={
                     nextChapterID
@@ -204,7 +206,7 @@ export default function ChapterPage({
                     window.history.pushState(null, ``, `${page + 2}`);
                 }}
             ></Link>
-            <div className="flex items-center justify-center absolute z-1 bottom-[5px] left-[50%] translate-x-[-50%]">
+            <div className="flex items-center justify-center absolute z-1 bottom-[-95px] left-[50%] translate-x-[-50%]">
                 {atHomeData !== undefined && (
                     <Progress
                         value={
