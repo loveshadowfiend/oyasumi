@@ -62,6 +62,8 @@ export default function ChapterPage({
     const [aggregate, setAggregate] = useState<[]>([]);
     const [aggregateIndex, setAggregateIndex] = useState<number>(-1);
 
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
     const ref = useRef(null);
 
     const { data: atHomeData, isLoading: isAtHomeLoading } = useQuery({
@@ -92,19 +94,6 @@ export default function ChapterPage({
         queryFn: () => fetchAggregate(mangaID, translatedLanguage),
         refetchOnWindowFocus: false,
     });
-
-    // hide progress bar within n milliseconds
-    // useEffect(() => {
-    //     if (isTimerActive) return;
-
-    //     setIsProgressHidden(false);
-
-    //     setIsTimerActive(true);
-    //     setTimeout(() => {
-    //         setIsProgressHidden(true);
-    //         setIsTimerActive(false);
-    //     }, 1500);
-    // }, [page]);
 
     useEffect(() => {
         setPage(params.page - 1);
@@ -183,91 +172,128 @@ export default function ChapterPage({
         }
     }, [previousChapterData]);
 
+    useEffect(() => {
+        if (
+            !isAggregateLoading &&
+            !isAtHomeLoading &&
+            !isChapterLoading &&
+            !isPreviousChapterLoading
+        ) {
+            setIsLoading(false);
+        }
+    }, [
+        isAggregateLoading,
+        isAtHomeLoading,
+        isChapterLoading,
+        isPreviousChapterLoading,
+    ]);
+
     return (
-        <div className="w-screen h-screen" ref={ref}>
-            <Link
-                href={
-                    nextChapterID
-                        ? `/chapter/${previousChapterID}/${previousChapterPages}`
-                        : `/manga/${mangaID}`
-                }
-                className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
-                onClick={(e) => {
-                    if (page - 1 < 0 && !aggregateData) return;
-                    if (page - 1 < 0) return;
-                    e.preventDefault();
-
-                    setPage(page - 1);
-                    window.history.pushState(null, ``, `${page}`);
-                }}
-                prefetch={true}
-            ></Link>
-
-            <Link
-                href={
-                    previousChapterID !== ""
-                        ? `/chapter/${nextChapterID}/1`
-                        : `/manga/${mangaID}`
-                }
-                className="absolute h-full w-[50%] cursor-pointer z-1 left-[50%]"
-                onClick={(e) => {
-                    if (
-                        page + 1 > atHomeData.chapter.data.length - 1 &&
-                        !aggregateData
-                    )
-                        return;
-                    if (page + 1 > atHomeData.chapter.data.length - 1) return;
-                    e.preventDefault();
-
-                    setPage(page + 1);
-                    window.history.pushState(null, ``, `${page + 2}`);
-                }}
-                prefetch={true}
-            ></Link>
-            <div className="flex items-center justify-center absolute z-1 bottom-[-95px] left-[50%] translate-x-[-50%]">
-                {atHomeData !== undefined && (
-                    <Progress
-                        value={
-                            atHomeData !== undefined
-                                ? ((page + 1) * 100) /
-                                  atHomeData.chapter.data.length
-                                : 0
-                        }
-                        className={cn(
-                            "w-[95vw] h-[5px] transition-opacity ease-in-out delay-50 duration-300",
-                            {
-                                "opacity-0": isProgressHidden,
-                                "opacity-100": !isProgressHidden,
+        <main>
+            <div className="w-screen h-screen" ref={ref}>
+                {!isLoading && (
+                    <>
+                        <Link
+                            href={
+                                nextChapterID
+                                    ? `/chapter/${previousChapterID}/${previousChapterPages}`
+                                    : `/manga/${mangaID}`
                             }
+                            className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
+                            onClick={(e) => {
+                                if (page - 1 < 0 && !aggregateData) return;
+                                if (page - 1 < 0) return;
+                                e.preventDefault();
+
+                                setPage(page - 1);
+                                window.history.pushState(null, ``, `${page}`);
+                            }}
+                            prefetch={true}
+                        ></Link>
+
+                        <Link
+                            href={
+                                previousChapterID !== ""
+                                    ? `/chapter/${nextChapterID}/1`
+                                    : `/manga/${mangaID}`
+                            }
+                            className="absolute h-full w-[50%] cursor-pointer z-1 left-[50%]"
+                            onClick={(e) => {
+                                if (
+                                    page + 1 >
+                                        atHomeData.chapter.data.length - 1 &&
+                                    !aggregateData
+                                )
+                                    return;
+                                if (
+                                    page + 1 >
+                                    atHomeData.chapter.data.length - 1
+                                )
+                                    return;
+                                e.preventDefault();
+
+                                setPage(page + 1);
+                                window.history.pushState(
+                                    null,
+                                    ``,
+                                    `${page + 2}`
+                                );
+                            }}
+                            prefetch={true}
+                        ></Link>
+                        <div className="flex items-center justify-center absolute z-1 bottom-[-95px] left-[50%] translate-x-[-50%]">
+                            {atHomeData !== undefined && (
+                                <Progress
+                                    value={
+                                        atHomeData !== undefined
+                                            ? ((page + 1) * 100) /
+                                              atHomeData.chapter.data.length
+                                            : 0
+                                    }
+                                    className={cn(
+                                        "w-[95vw] h-[5px] transition-opacity ease-in-out delay-50 duration-300",
+                                        {
+                                            "opacity-0": isProgressHidden,
+                                            "opacity-100": !isProgressHidden,
+                                        }
+                                    )}
+                                    onChange={() => {}}
+                                />
+                            )}
+                        </div>
+
+                        {atHomeData !== undefined && (
+                            <div className="flex items-center justify-center">
+                                {atHomeData.chapter.data.map(
+                                    (filename, index) => {
+                                        const host = atHomeData.baseUrl;
+                                        const hash = atHomeData.chapter.hash;
+
+                                        return (
+                                            <Image
+                                                className={cn(
+                                                    "h-screen w-auto",
+                                                    {
+                                                        "visually-hidden":
+                                                            index !== page,
+                                                    }
+                                                )}
+                                                src={`${host}/data/${hash}/${filename}`}
+                                                key={index}
+                                                alt={`page ${page + 1}`}
+                                                width={0}
+                                                height={0}
+                                                sizes="100vh"
+                                                priority={true}
+                                            />
+                                        );
+                                    }
+                                )}
+                            </div>
                         )}
-                        onChange={() => {}}
-                    />
+                    </>
                 )}
             </div>
-
-            {atHomeData !== undefined && (
-                <div className="flex items-center justify-center">
-                    {atHomeData.chapter.data.map((filename, index) => {
-                        const host = atHomeData.baseUrl;
-                        const hash = atHomeData.chapter.hash;
-
-                        return (
-                            <Image
-                                className={cn("h-screen w-auto", {
-                                    "visually-hidden": index !== page,
-                                })}
-                                src={`${host}/data/${hash}/${filename}`}
-                                key={index}
-                                alt={`page ${page + 1}`}
-                                width={0}
-                                height={0}
-                                sizes="100vh"
-                                priority={true}
-                            />
-                        );
-                    })}
-                </div>
-            )}
-        </div>
+        </main>
     );
 }
