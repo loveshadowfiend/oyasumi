@@ -23,6 +23,7 @@ export const SearchInput = () => {
                 e.preventDefault();
 
                 updateFetchSubmit(inputRef.current.value);
+                inputRef.current.value = "";
             }}
         >
             <Input className="w-[300px]" placeholder="search" ref={inputRef} />

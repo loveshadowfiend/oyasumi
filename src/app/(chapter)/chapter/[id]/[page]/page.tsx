@@ -57,27 +57,36 @@ export default function ChapterPage({
 
     const [previousChapterID, setPreviousChapterID] = useState<string>("");
     const [nextChapterID, setNextChapterID] = useState<string>("");
+    const [previousChapterPages, setPreviousChapterPages] = useState<number>(0);
 
     const [aggregate, setAggregate] = useState<[]>([]);
     const [aggregateIndex, setAggregateIndex] = useState<number>(-1);
 
     const ref = useRef(null);
 
-    const { data: atHomeData } = useQuery({
+    const { data: atHomeData, isLoading: isAtHomeLoading } = useQuery({
         enabled: !!params.id,
         queryKey: ["atHome", params.id],
         queryFn: () => fetchAtHome(params.id),
         refetchOnWindowFocus: false,
     });
 
-    const { data: chapterData } = useQuery({
+    const { data: chapterData, isLoading: isChapterLoading } = useQuery({
         enabled: !!params.id,
         queryKey: ["chapter", params.id],
         queryFn: () => fetchChapter(params.id),
         refetchOnWindowFocus: false,
     });
 
-    const { data: aggregateData } = useQuery({
+    const { data: previousChapterData, isLoading: isPreviousChapterLoading } =
+        useQuery({
+            enabled: !!previousChapterID,
+            queryKey: ["previousChapter", previousChapterID],
+            queryFn: () => fetchChapter(previousChapterID),
+            refetchOnWindowFocus: false,
+        });
+
+    const { data: aggregateData, isLoading: isAggregateLoading } = useQuery({
         enabled: !!mangaID,
         queryKey: ["aggregate", mangaID],
         queryFn: () => fetchAggregate(mangaID, translatedLanguage),
@@ -160,19 +169,26 @@ export default function ChapterPage({
     useEffect(() => {
         if (!aggregate.length || aggregateIndex === -1) return;
 
-        const next = aggregate[aggregateIndex + 1];
-        const prev = aggregate[aggregateIndex - 1];
+        const prev = aggregate[aggregateIndex + 1];
+        const next = aggregate[aggregateIndex - 1];
 
         setNextChapterID(next ? next.chapterID : "");
         setPreviousChapterID(prev ? prev.chapterID : "");
     }, [aggregateIndex]);
 
+    useEffect(() => {
+        if (previousChapterData !== undefined) {
+            setPreviousChapterPages(previousChapterData.data.attributes.pages);
+            console.log(previousChapterData.data.attributes.pages);
+        }
+    }, [previousChapterData]);
+
     return (
         <div className="w-screen h-screen" ref={ref}>
             <Link
                 href={
-                    previousChapterID !== ""
-                        ? `/chapter/${previousChapterID}/1`
+                    nextChapterID
+                        ? `/chapter/${previousChapterID}/${previousChapterPages}`
                         : `/manga/${mangaID}`
                 }
                 className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
@@ -184,11 +200,12 @@ export default function ChapterPage({
                     setPage(page - 1);
                     window.history.pushState(null, ``, `${page}`);
                 }}
+                prefetch={true}
             ></Link>
 
             <Link
                 href={
-                    nextChapterID
+                    previousChapterID !== ""
                         ? `/chapter/${nextChapterID}/1`
                         : `/manga/${mangaID}`
                 }
@@ -205,6 +222,7 @@ export default function ChapterPage({
                     setPage(page + 1);
                     window.history.pushState(null, ``, `${page + 2}`);
                 }}
+                prefetch={true}
             ></Link>
             <div className="flex items-center justify-center absolute z-1 bottom-[-95px] left-[50%] translate-x-[-50%]">
                 {atHomeData !== undefined && (
