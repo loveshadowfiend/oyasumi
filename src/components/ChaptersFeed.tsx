@@ -103,11 +103,12 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
                                 <TableRow
                                     key={index}
                                     className="cursor-pointer"
+                                    onClick={() => {
+                                        router.push(`/chapter/${chapter.id}/1`);
+                                    }}
                                 >
-                                    <Link href={`/chapter/${chapter.id}/1`}>
-                                        <TableCell className="w-full">{`Chapter ${chapter.attributes.chapter}`}</TableCell>
-                                        <TableCell className="text-center">{`${chapter.attributes.translatedLanguage}`}</TableCell>
-                                    </Link>
+                                    <TableCell className="w-full">{`Chapter ${chapter.attributes.chapter}`}</TableCell>
+                                    <TableCell className="text-center">{`${chapter.attributes.translatedLanguage}`}</TableCell>
                                 </TableRow>
                             );
                         })}

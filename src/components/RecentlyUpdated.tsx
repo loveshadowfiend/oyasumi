@@ -43,7 +43,6 @@ export default async function RecentlyUpdated() {
                                             alt={`${mangaTitle} cover`}
                                             width={200}
                                             height={255}
-                                            objectFit="cover"
                                         />
                                         <p className="text-[14px] font-medium">
                                             {`${mangaTitle.substr(0, 50)}` +

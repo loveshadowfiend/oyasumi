@@ -1,27 +1,19 @@
-import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
-import "./globals.css";
-
-import { cn } from "@/lib/utils";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import QueryProvider from "@/components/tanstack/QueryProvider";
+import { cn } from "@/lib/utils";
+import { Inter as FontSans } from "next/font/google";
+import "@/app/globals.css";
 
 const fontSans = FontSans({
     subsets: ["latin"],
     variable: "--font-sans",
 });
 
-export const metadata: Metadata = {
-    title: "oyasumi",
-    description: "powered by mangadex",
-};
-
-export default function RootLayout({
+export default function ChapterLayout({
     children,
-}: Readonly<{
+}: {
     children: React.ReactNode;
-}>) {
+}) {
     return (
         <html lang="en">
             <body
@@ -30,7 +22,12 @@ export default function RootLayout({
                     fontSans.variable
                 )}
             >
-                <QueryProvider>{children}</QueryProvider>
+                <QueryProvider>
+                    <div className="px-[50px] border-b-[1px]">
+                        <Header className="h-[100px] mb-[0px]" />
+                    </div>
+                    {children}
+                </QueryProvider>
             </body>
         </html>
     );

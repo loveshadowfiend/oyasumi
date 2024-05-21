@@ -22,7 +22,7 @@ const fetchMangaByTitle = async (title: string) => {
 export default function SearchResults() {
     const params = useParams<{ title: string }>();
 
-    const { updateFetchSubmit } = useSearchStore();
+    // const { updateFetchSubmit } = useSearchStore();
 
     const { data: searchData, isLoading } = useQuery({
         enabled: !!params.title,
