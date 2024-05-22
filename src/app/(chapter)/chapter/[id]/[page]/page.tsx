@@ -129,9 +129,11 @@ export default function ChapterPage({
     useEffect(() => {
         if (!aggregate.length || aggregateIndex === -1) return;
 
-        const prev = aggregate[aggregateIndex + 1];
         const next = aggregate[aggregateIndex - 1];
+        const prev = aggregate[aggregateIndex + 1];
 
+        console.log(aggregate);
+        console.log(next.chapterID);
         setNextChapterID(next ? next.chapterID : "");
         setPreviousChapterID(prev ? prev.chapterID : "");
     }, [aggregateIndex]);
@@ -166,7 +168,7 @@ export default function ChapterPage({
                     <>
                         <Link
                             href={
-                                nextChapterID
+                                previousChapterID
                                     ? `/chapter/${previousChapterID}/${previousChapterPages}`
                                     : `/manga/${mangaID}`
                             }
@@ -184,7 +186,7 @@ export default function ChapterPage({
 
                         <Link
                             href={
-                                previousChapterID !== ""
+                                nextChapterID !== ""
                                     ? `/chapter/${nextChapterID}/1`
                                     : `/manga/${mangaID}`
                             }
