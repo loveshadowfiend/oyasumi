@@ -1,5 +1,5 @@
-import Header from "@/components/Header";
-import QueryProvider from "@/components/tanstack/QueryProvider";
+import Header from "@/components/header";
+import QueryProvider from "@/components/tanstack/query-provider";
 import { cn } from "@/lib/utils";
 import { Inter as FontSans } from "next/font/google";
 import "@/app/globals.css";
