@@ -7,36 +7,7 @@ import { Progress } from "@/components/ui/progress";
 
 import Image from "next/image";
 import Link from "next/link";
-
-const fetchAtHome = async (chapterID: string) => {
-    const response = await fetch(
-        `https://api.mangadex.org/at-home/server/${chapterID}`
-    );
-    const data = await response.json();
-
-    return data;
-};
-
-const fetchChapter = async (chapterID: string) => {
-    const response = await fetch(
-        `https://api.mangadex.org/chapter/${chapterID}?includes[]=manga`
-    );
-    const data = await response.json();
-
-    return data;
-};
-
-const fetchAggregate = async (
-    mangaID: string,
-    translatedLanguage: string[]
-) => {
-    const response = await fetch(
-        `https://api.mangadex.org/manga/${mangaID}/aggregate?translatedLanguage[]=${translatedLanguage}`
-    );
-    const data = await response.json();
-
-    return data;
-};
+import { fetchAggregate, fetchAtHome, fetchChapter } from "@/api/chapter";
 
 export default function ChapterPage({
     params,

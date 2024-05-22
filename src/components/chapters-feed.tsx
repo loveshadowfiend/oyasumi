@@ -15,25 +15,11 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { fetchFeed } from "@/api/feed";
 
 interface ChaptersFeedProps {
     mangaID: string;
 }
-
-const fetchFeed = async (
-    mangaID: string,
-    orderChapter: string,
-    offset: number,
-    translatedLanguage: string[],
-    limit: number
-) => {
-    const response = await fetch(
-        `https://api.mangadex.org/manga/${mangaID}/feed?order[chapter]=${orderChapter}&offset=${offset}&translatedLanguage[]=${translatedLanguage}&limit=${limit}`
-    );
-    const data = await response.json();
-
-    return data;
-};
 
 export const ChaptersFeed = (props: ChaptersFeedProps) => {
     const [orderChapter, setOrderChapter] = useState<"asc" | "desc">("desc");
