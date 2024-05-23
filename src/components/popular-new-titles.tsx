@@ -32,8 +32,7 @@ export default function PopularNewTitles() {
             });
     }, []);
 
-    if (isLoading)
-        return <Skeleton className={`w-full h-[${imageHeight}px]`} />;
+    if (isLoading) return <Skeleton className={`w-full h-[355px]`} />;
 
     return (
         <div className="flex flex-col gap-3 w-full">
@@ -66,7 +65,7 @@ export default function PopularNewTitles() {
                                     <Link href={`manga/${mangaId}`}>
                                         <div className="flex gap-5">
                                             <Image
-                                                className={`object-cover w-[${imageWidth}px] h-[${imageHeight}px] rounded-md`}
+                                                className={`object-cover w-[250px] h-[355px] rounded-md`}
                                                 src={coverUrl}
                                                 alt={`${mangaTitle} cover`}
                                                 width={imageWidth}
