@@ -6,16 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-
-const fetchMangaByTitle = async (title: string) => {
-    const response = await fetch(
-        `https://api.mangadex.org/manga?title=${title}&includes[]=cover_art&order[relevance]=desc`
-    );
-
-    const data = await response.json();
-
-    return data;
-};
+import { fetchMangaByTitle } from "@/api/manga";
 
 export default function SearchResults() {
     const params = useParams<{ title: string }>();
