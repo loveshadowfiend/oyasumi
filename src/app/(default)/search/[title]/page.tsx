@@ -51,29 +51,30 @@ export default function SearchResults() {
                         const coverUrl = `https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}.512.jpg`;
 
                         return (
-                            <Link key={index} href={`/manga/${mangaId}`}>
-                                <Card>
-                                    <CardContent className="flex p-3 gap-5">
-                                        <Image
-                                            className="rounded-md min-w-[256px]"
-                                            src={coverUrl}
-                                            alt={`${mangaTitle} cover`}
-                                            width={256}
-                                            height={360}
-                                        ></Image>
-                                        <div className="flex flex-col gap-3">
-                                            <h3 className="text-2xl font-semibold">
-                                                {mangaTitle}
-                                            </h3>
-                                            <p className="text-justify">
-                                                {
-                                                    manga.attributes.description
-                                                        .en
-                                                }
-                                            </p>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                            <Link
+                                key={index}
+                                href={`/manga/${mangaId}`}
+                                className="flex p-3 gap-5"
+                            >
+                                {/* <Card>
+                                    <CardContent className="flex p-3 gap-5"> */}
+                                <Image
+                                    className="rounded-md min-w-[256px]"
+                                    src={coverUrl}
+                                    alt={`${mangaTitle} cover`}
+                                    width={256}
+                                    height={360}
+                                ></Image>
+                                <div className="flex flex-col gap-3">
+                                    <h3 className="text-2xl font-semibold">
+                                        {mangaTitle}
+                                    </h3>
+                                    <p className="text-justify">
+                                        {manga.attributes.description.en}
+                                    </p>
+                                </div>
+                                {/* </CardContent>
+                                </Card> */}
                             </Link>
                         );
                     })}

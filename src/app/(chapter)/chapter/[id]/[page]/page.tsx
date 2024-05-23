@@ -132,8 +132,6 @@ export default function ChapterPage({
         const next = aggregate[aggregateIndex - 1];
         const prev = aggregate[aggregateIndex + 1];
 
-        console.log(aggregate);
-        console.log(next.chapterID);
         setNextChapterID(next ? next.chapterID : "");
         setPreviousChapterID(prev ? prev.chapterID : "");
     }, [aggregateIndex]);
@@ -141,7 +139,6 @@ export default function ChapterPage({
     useEffect(() => {
         if (previousChapterData !== undefined) {
             setPreviousChapterPages(previousChapterData.data.attributes.pages);
-            console.log(previousChapterData.data.attributes.pages);
         }
     }, [previousChapterData]);
 

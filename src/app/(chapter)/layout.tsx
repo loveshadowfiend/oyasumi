@@ -23,7 +23,7 @@ export default function ChapterLayout({
                 )}
             >
                 <QueryProvider>
-                    <div className="px-[50px] border-b-[1px]">
+                    <div className="px-[100px] border-b-[1px]">
                         <Header className="h-[100px] mb-[0px]" />
                     </div>
                     {children}

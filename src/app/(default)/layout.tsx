@@ -23,9 +23,9 @@ export default function DefaultLayout({
                 )}
             >
                 <QueryProvider>
-                    <div className="px-[20px] pb-5 md:px-[100px]">
-                        <Header />
-                        {children}
+                    <div className="pb-5">
+                        <Header className="px-[100px] border-b-[0.5px]" />
+                        <div className="px-[100px]">{children}</div>
                     </div>
                 </QueryProvider>
             </body>
