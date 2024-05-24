@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { getOneMonthAgo } from "@/utils/getOneMonthAgo";
 import {
     Carousel,
     CarouselContent,
@@ -13,24 +12,18 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import { useState, useEffect } from "react";
 import { Skeleton } from "./ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
+import { fetchPopularNewTitles } from "@/api/manga";
 
 export default function PopularNewTitles() {
-    const [data, setData] = useState(null);
-    const [isLoading, setLoading] = useState(true);
+    const { data, isLoading } = useQuery({
+        queryKey: ["popularNewTitles"],
+        queryFn: () => fetchPopularNewTitles(),
+        refetchOnWindowFocus: false,
+    });
 
     const imageWidth = 250,
         imageHeight = 355;
-
-    useEffect(() => {
-        fetch(
-            `https://api.mangadex.org/manga?order[followedCount]=desc&limit=10&includes[]=cover_art&createdAtSince=${getOneMonthAgo()}`
-        )
-            .then((res) => res.json())
-            .then((data) => {
-                setData(data);
-                setLoading(false);
-            });
-    }, []);
 
     if (isLoading) return <Skeleton className={`w-full h-[355px]`} />;
 

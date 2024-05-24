@@ -16,15 +16,12 @@ export default function ChapterPage({
 }) {
     const [page, setPage] = useState<number>(0);
     const [isProgressHidden, setIsProgressHidden] = useState<boolean>(false);
-    const [isTimerActive, setIsTimerActive] = useState<boolean>(false);
 
     const [mangaID, setMangaID] = useState<string>("");
 
     const [translatedLanguage, setTranslatedLanguage] = useState<string[]>([
         "",
     ]);
-    const [chapter, setChapter] = useState<string>("");
-    const [volume, setVolume] = useState<string>("");
 
     const [previousChapterID, setPreviousChapterID] = useState<string>("");
     const [nextChapterID, setNextChapterID] = useState<string>("");
@@ -71,6 +68,16 @@ export default function ChapterPage({
     }, []);
 
     useEffect(() => {
+        setIsProgressHidden(false);
+
+        const timeout = setTimeout(() => {
+            setIsProgressHidden(true);
+        }, 1500);
+
+        return () => clearTimeout(timeout);
+    }, [page]);
+
+    useEffect(() => {
         if (ref === null) return;
 
         window.scrollTo({ top: ref.current.offsetTop });
@@ -85,8 +92,6 @@ export default function ChapterPage({
                 return rel.type == "manga";
             })[0].id
         );
-        setVolume(chapterData.data.attributes.volume);
-        setChapter(chapterData.data.attributes.chapter);
         setTranslatedLanguage(chapterData.data.attributes.translatedLanguage);
     }, [chapterData]);
 
@@ -102,6 +107,8 @@ export default function ChapterPage({
                             aggregateData.volumes[volumeKey].chapters[
                                 chapterKey
                             ].id;
+
+                        console.log(_aggregate);
 
                         _aggregate = [
                             ..._aggregate,
@@ -176,7 +183,12 @@ export default function ChapterPage({
                                 e.preventDefault();
 
                                 setPage(page - 1);
-                                window.history.pushState(null, ``, `${page}`);
+                                window.history.replaceState(
+                                    null,
+                                    ``,
+                                    `${page}`
+                                );
+                                window.scrollTo({ top: ref.current.offsetTop });
                             }}
                             prefetch={true}
                         ></Link>
@@ -203,11 +215,12 @@ export default function ChapterPage({
                                 e.preventDefault();
 
                                 setPage(page + 1);
-                                window.history.pushState(
+                                window.history.replaceState(
                                     null,
                                     ``,
                                     `${page + 2}`
                                 );
+                                window.scrollTo({ top: ref.current.offsetTop });
                             }}
                             prefetch={true}
                         ></Link>
@@ -227,7 +240,6 @@ export default function ChapterPage({
                                             "opacity-100": !isProgressHidden,
                                         }
                                     )}
-                                    onChange={() => {}}
                                 />
                             )}
                         </div>
