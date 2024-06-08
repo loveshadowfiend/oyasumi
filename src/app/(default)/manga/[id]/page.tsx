@@ -4,15 +4,46 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChaptersFeed } from "@/components/chapters-feed";
 
+import type { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+    params: { id: string };
+};
+
+export async function generateMetadata(
+    { params }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const manga = await fetch(
+        `https://api.mangadex.org/manga/${params.id}?includes[]=cover_art`
+    ).then((res) => res.json());
+
+    return {
+        title:
+            manga.data.attributes.title.en ??
+            manga.data.attributes.title.ja ??
+            manga.data.attributes.title["ja-ro"] ??
+            manga.data.attributes.title[
+                Object.keys(manga.data.attributes.title)[0]
+            ],
+        description:
+            manga.data.attributes.description.en ??
+            manga.data.attributes.description.ja ??
+            manga.data.attributes.description["ja-ro"] ??
+            manga.data.attributes.description[
+                Object.keys(manga.data.attributes.description)[0]
+            ],
+    };
+}
+
 export default async function MangaPage({
     params,
 }: {
     params: { id: string };
 }) {
-    const mangaResponse = await fetch(
+    const mangaData = await fetch(
         `https://api.mangadex.org/manga/${params.id}?includes[]=cover_art`
-    );
-    const mangaData = await mangaResponse.json();
+    ).then((res) => res.json());
 
     const coverFileName =
         mangaData.data.relationships.filter((rel: { type: string }) => {
@@ -60,7 +91,10 @@ export default async function MangaPage({
                     <h2 className="text-4xl font-bold">
                         {mangaData.data.attributes.title.en ??
                             mangaData.data.attributes.title.ja ??
-                            mangaData.data.attributes.title["ja-ro"]}
+                            mangaData.data.attributes.title["ja-ro"] ??
+                            mangaData.data.attributes.title[
+                                Object.keys(mangaData.data.attributes.title)[0]
+                            ]}
                     </h2>
                     <div className="flex gap-1 items-center">
                         <Star />
@@ -76,7 +110,12 @@ export default async function MangaPage({
                 </div>
                 <div>
                     <p className="text-justify">
-                        {mangaData.data.attributes.description.en}
+                        {mangaData.data.attributes.description.en ??
+                            mangaData.data.attributes.description.ja ??
+                            mangaData.data.attributes.description["ja-ro"] ??
+                            mangaData.data.attributes.description[
+                                Object.keys(mangaData.data.attributes.title)[0]
+                            ]}
                     </p>
                 </div>
                 <div>

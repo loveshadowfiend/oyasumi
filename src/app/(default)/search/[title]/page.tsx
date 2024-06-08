@@ -40,9 +40,9 @@ export default function SearchResults() {
                     searchData.data.map((manga, index) => {
                         const mangaId = manga.id;
                         const mangaTitle =
-                            manga.attributes.title.en ??
-                            manga.attributes.title["ja-ro"] ??
-                            manga.attributes.title.ja;
+                            manga.attributes.title[
+                                Object.keys(manga.attributes.title)[0]
+                            ];
                         const coverFileName = manga.relationships.filter(
                             (rel: { type: string }) => {
                                 return rel.type == "cover_art";
@@ -56,8 +56,6 @@ export default function SearchResults() {
                                 href={`/manga/${mangaId}`}
                                 className="flex p-3 gap-5"
                             >
-                                {/* <Card>
-                                    <CardContent className="flex p-3 gap-5"> */}
                                 <Image
                                     className="rounded-md min-w-[256px]"
                                     src={coverUrl}
@@ -70,11 +68,15 @@ export default function SearchResults() {
                                         {mangaTitle}
                                     </h3>
                                     <p className="text-justify">
-                                        {manga.attributes.description.en}
+                                        {
+                                            manga.attributes.description[
+                                                Object.keys(
+                                                    manga.attributes.description
+                                                )[0]
+                                            ]
+                                        }
                                     </p>
                                 </div>
-                                {/* </CardContent>
-                                </Card> */}
                             </Link>
                         );
                     })}

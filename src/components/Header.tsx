@@ -1,8 +1,28 @@
+"use client";
+
 import Link from "next/link";
-import { Input } from "./ui/input";
 import { SearchInput } from "@/components/search-input";
 import { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
+import { Settings } from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Button } from "./ui/button";
+import { SettingsForm } from "./settings-form";
 
 export default function Header({ className }: ComponentProps<"div">) {
     return (
@@ -17,6 +37,19 @@ export default function Header({ className }: ComponentProps<"div">) {
             </Link>
             <div className="flex flex-row items-center gap-4">
                 <SearchInput />
+                <Dialog>
+                    <DialogTrigger>
+                        <Settings />
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Settings</DialogTitle>
+                            <div className="pt-4">
+                                <SettingsForm />
+                            </div>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
             </div>
         </header>
     );

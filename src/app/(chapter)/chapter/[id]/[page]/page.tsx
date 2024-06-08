@@ -95,10 +95,14 @@ export default function ChapterPage({
         setTranslatedLanguage(chapterData.data.attributes.translatedLanguage);
     }, [chapterData]);
 
+    // logic to get the list of chapters
     useEffect(() => {
         if (aggregateData === undefined) return;
 
         let _aggregate = [];
+        let chapters = new Set();
+        let currentChapter: string;
+
         Object.keys(aggregateData.volumes).map(
             (volumeKey, volumeIndex, volumeArray) => {
                 Object.keys(aggregateData.volumes[volumeKey].chapters).map(
@@ -108,16 +112,18 @@ export default function ChapterPage({
                                 chapterKey
                             ].id;
 
-                        console.log(_aggregate);
+                        if (chapterID === params.id) {
+                            currentChapter = chapterKey;
+                        }
 
-                        _aggregate = [
-                            ..._aggregate,
-                            {
+                        if (!chapters.has(chapterKey)) {
+                            chapters.add(chapterKey);
+                            _aggregate.push({
                                 volume: volumeKey,
                                 chapter: chapterKey,
                                 chapterID: chapterID,
-                            },
-                        ];
+                            });
+                        }
                     }
                 );
             }
@@ -127,12 +133,13 @@ export default function ChapterPage({
         setAggregate(_aggregate);
 
         _aggregate.forEach((chapter, index) => {
-            if (chapter.chapterID === params.id) {
+            if (chapter.chapter === currentChapter) {
                 setAggregateIndex(index);
             }
         });
     }, [aggregateData]);
 
+    // logic to get next/previous chapter link
     useEffect(() => {
         if (!aggregate.length || aggregateIndex === -1) return;
 
@@ -149,6 +156,7 @@ export default function ChapterPage({
         }
     }, [previousChapterData]);
 
+    // toggle loading state
     useEffect(() => {
         if (
             !isAggregateLoading &&
@@ -164,6 +172,10 @@ export default function ChapterPage({
         isChapterLoading,
         isPreviousChapterLoading,
     ]);
+
+    console.log(previousChapterID);
+    console.log(nextChapterID);
+    console.log(aggregateIndex);
 
     return (
         <main>

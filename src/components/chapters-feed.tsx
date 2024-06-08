@@ -13,9 +13,9 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowUpDown } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { fetchFeed } from "@/api/feed";
+import { Skeleton } from "./ui/skeleton";
 
 interface ChaptersFeedProps {
     mangaID: string;
@@ -24,6 +24,8 @@ interface ChaptersFeedProps {
 export const ChaptersFeed = (props: ChaptersFeedProps) => {
     const [orderChapter, setOrderChapter] = useState<"asc" | "desc">("desc");
     const [page, setPage] = useState(0);
+
+    const chapters = new Set();
 
     const router = useRouter();
 
@@ -56,6 +58,10 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
         );
     }
 
+    if (isLoading) {
+        return <Skeleton className="w-full h-[500px]"></Skeleton>;
+    }
+
     return (
         <div>
             <Table>
@@ -85,6 +91,14 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
                 <TableBody>
                     {feedData !== undefined &&
                         feedData.data.map((chapter, index) => {
+                            if (
+                                chapters.has(chapter.attributes.chapter) ||
+                                !chapter.attributes.pages
+                            )
+                                return;
+
+                            chapters.add(chapter.attributes.chapter);
+
                             return (
                                 <TableRow
                                     key={index}
@@ -98,10 +112,6 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
                                 </TableRow>
                             );
                         })}
-                    <TableRow className="invisible">
-                        <TableCell className="w-full" />
-                        <TableCell className="text-right" />
-                    </TableRow>
                 </TableBody>
             </Table>
         </div>

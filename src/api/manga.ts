@@ -19,3 +19,12 @@ export const fetchPopularNewTitles = async () => {
 
     return data;
 };
+
+export const fetchRecentlyUpdated = async () => {
+    const response = await fetch(
+        `https://api.mangadex.org/manga?order[createdAt]=desc&limit=6&includes[]=cover_art`
+    );
+    const data = await response.json();
+
+    return data;
+};
