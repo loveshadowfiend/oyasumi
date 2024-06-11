@@ -1,6 +1,12 @@
 import { create } from "zustand";
 
-const useSearchStore = create((set) => ({
+interface SearchStore {
+    fetchSubmit: string;
+
+    updateFetchSubmit: (input: string) => void;
+}
+
+const useSearchStore = create<SearchStore>()((set) => ({
     fetchSubmit: "",
 
     updateFetchSubmit: (input: string) => {

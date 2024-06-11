@@ -33,6 +33,18 @@ export default function SearchResults() {
         );
     }
 
+    if (isLoading) {
+        return skeletons;
+    }
+
+    if (!searchData.data.length) {
+        return (
+            <div className="w-full flex items-center justify-center italic pt-3">
+                No Manga Found :( Try to Submit Another Title
+            </div>
+        );
+    }
+
     return (
         <main className="overflow-auto">
             <div className="flex flex-col gap-3">
@@ -68,19 +80,17 @@ export default function SearchResults() {
                                         {mangaTitle}
                                     </h3>
                                     <p className="text-justify">
-                                        {
+                                        {manga.attributes.description.en ??
                                             manga.attributes.description[
                                                 Object.keys(
                                                     manga.attributes.description
                                                 )[0]
-                                            ]
-                                        }
+                                            ]}
                                     </p>
                                 </div>
                             </Link>
                         );
                     })}
-                {isLoading && skeletons}
             </div>
         </main>
     );

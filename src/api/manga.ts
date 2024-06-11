@@ -1,4 +1,4 @@
-import { getOneMonthAgo } from "@/utils/getOneMonthAgo";
+import { getSixMonthAgo } from "@/utils/dates";
 
 export const fetchMangaByTitle = async (title: string) => {
     const response = await fetch(
@@ -12,7 +12,7 @@ export const fetchMangaByTitle = async (title: string) => {
 
 export const fetchPopularNewTitles = async () => {
     const response = await fetch(
-        `https://api.mangadex.org/manga?order[followedCount]=desc&limit=10&includes[]=cover_art&createdAtSince=${getOneMonthAgo()}`
+        `https://api.mangadex.org/manga?order[followedCount]=desc&limit=10&includes[]=cover_art&createdAtSince=${getSixMonthAgo()}`
     );
 
     const data = await response.json();

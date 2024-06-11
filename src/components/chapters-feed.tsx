@@ -16,12 +16,14 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { fetchFeed } from "@/api/feed";
 import { Skeleton } from "./ui/skeleton";
+import useSettingsStore from "@/stores/settingsStore";
 
 interface ChaptersFeedProps {
     mangaID: string;
 }
 
 export const ChaptersFeed = (props: ChaptersFeedProps) => {
+    const { translatedLanguage } = useSettingsStore();
     const [orderChapter, setOrderChapter] = useState<"asc" | "desc">("desc");
     const [page, setPage] = useState(0);
 
@@ -29,13 +31,26 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
 
     const router = useRouter();
 
-    const limit = 50;
+    const limit = 100;
 
     const { data: feedData, isLoading } = useQuery({
         enabled: !!props.mangaID,
-        queryKey: ["feed", props.mangaID, orderChapter, page],
+        queryKey: [
+            "feed",
+            props.mangaID,
+            orderChapter,
+            page,
+            translatedLanguage,
+        ],
         queryFn: () =>
-            fetchFeed(props.mangaID, orderChapter, page * limit, ["en"], limit),
+            fetchFeed(
+                props.mangaID,
+                orderChapter,
+                page * limit,
+                translatedLanguage,
+                limit
+            ),
+        refetchOnWindowFocus: false,
     });
 
     let pages = [];
@@ -60,6 +75,14 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
 
     if (isLoading) {
         return <Skeleton className="w-full h-[500px]"></Skeleton>;
+    }
+
+    if (!feedData.data.length) {
+        return (
+            <div className="w-full flex items-center justify-center italic pt-3">
+                No Chapters Found :( Try Changing Language in Settings
+            </div>
+        );
     }
 
     return (

@@ -4,7 +4,12 @@ import { cn } from "@/lib/utils";
 import { Inter as FontSans } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import useSettingsStore from "@/stores/settingsStore";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "oyasumi",
+    description: "oyasumi — manga reading web app powered by mangadex!",
+};
 
 const fontSans = FontSans({
     subsets: ["latin"],

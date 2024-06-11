@@ -1,10 +1,22 @@
 import { create } from "zustand";
 
-const useSettingsStore = create((set) => ({
-    theme: localStorage.getItem("ui-theme") ?? "system",
+interface SettingsStore {
+    theme: string;
+    translatedLanguage: string[];
 
-    updateTheme: (selectedTheme: string) => {
-        set({ theme: selectedTheme });
+    updateTheme: (theme: string) => void;
+    updateTranslatedLanguage: (language: string[]) => void;
+}
+
+const useSettingsStore = create<SettingsStore>()((set) => ({
+    theme: localStorage.getItem("ui-theme") ?? "system",
+    translatedLanguage: [localStorage.getItem("translated-language") ?? "en"],
+
+    updateTheme: (theme: string) => {
+        set({ theme: theme });
+    },
+    updateTranslatedLanguage: (language: string[]) => {
+        set({ translatedLanguage: language });
     },
 }));
 

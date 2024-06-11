@@ -1,6 +1,6 @@
 "use client";
 
-import useSearchStore, { searchStore } from "@/stores/searchStore";
+import useSearchStore from "@/stores/searchStore";
 import { Input } from "./ui/input";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,13 +8,14 @@ import { useRouter } from "next/navigation";
 export const SearchInput = () => {
     const router = useRouter();
     const { fetchSubmit, updateFetchSubmit } = useSearchStore();
-    const inputRef = useRef(null);
 
     useEffect(() => {
         if (!fetchSubmit) return;
 
         router.push(`/search/${fetchSubmit}`);
-    }, [fetchSubmit, router]);
+
+        updateFetchSubmit("");
+    }, [fetchSubmit, router, updateFetchSubmit]);
 
     return (
         <form
@@ -22,11 +23,14 @@ export const SearchInput = () => {
             onSubmit={(e) => {
                 e.preventDefault();
 
-                updateFetchSubmit(inputRef.current.value);
-                inputRef.current.value = "";
+                const form = e.target as HTMLFormElement;
+                const input = form.elements[0] as HTMLInputElement;
+
+                updateFetchSubmit(input.value);
+                input.value = "";
             }}
         >
-            <Input className="w-[300px]" placeholder="search" ref={inputRef} />
+            <Input className="w-[300px]" placeholder="search" />
         </form>
     );
 };

@@ -8,20 +8,28 @@ import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchAggregate, fetchAtHome, fetchChapter } from "@/api/chapter";
+import useChapterStore from "@/stores/chapterStore";
+import { ChapterHeader } from "@/components/chapter-header";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ChapterPage({
     params,
 }: {
     params: { id: string; page: number };
 }) {
+    const {
+        mangaID,
+        nextChapterLink,
+        previousChapterLink,
+        updateChapter,
+        updateNextLink,
+        updatePreviousLink,
+    } = useChapterStore();
+
+    const [translatedLanguage, setTranslatedLanguage] = useState(["en"]);
+
     const [page, setPage] = useState<number>(0);
     const [isProgressHidden, setIsProgressHidden] = useState<boolean>(false);
-
-    const [mangaID, setMangaID] = useState<string>("");
-
-    const [translatedLanguage, setTranslatedLanguage] = useState<string[]>([
-        "",
-    ]);
 
     const [previousChapterID, setPreviousChapterID] = useState<string>("");
     const [nextChapterID, setNextChapterID] = useState<string>("");
@@ -56,6 +64,15 @@ export default function ChapterPage({
             refetchOnWindowFocus: false,
         });
 
+    const { data: nextChapterData, isLoading: isNextChapterLoading } = useQuery(
+        {
+            enabled: !!nextChapterID,
+            queryKey: ["nextChapter", nextChapterID],
+            queryFn: () => fetchChapter(nextChapterID),
+            refetchOnWindowFocus: false,
+        }
+    );
+
     const { data: aggregateData, isLoading: isAggregateLoading } = useQuery({
         enabled: !!mangaID,
         queryKey: ["aggregate", mangaID],
@@ -78,56 +95,60 @@ export default function ChapterPage({
     }, [page]);
 
     useEffect(() => {
-        if (ref === null) return;
+        if (ref === null || ref.current === null) return;
 
         window.scrollTo({ top: ref.current.offsetTop });
-    }, [ref]);
+    }, [ref, isLoading]);
 
-    // get manga id
+    // get manga id and translated langauge
     useEffect(() => {
         if (chapterData === undefined) return;
 
-        setMangaID(
-            chapterData.data.relationships.filter((rel: { type: string }) => {
+        const _manga = chapterData.data.relationships.filter(
+            (rel: { type: string }) => {
                 return rel.type == "manga";
-            })[0].id
+            }
+        )[0];
+
+        updateChapter(
+            _manga.id,
+            _manga.attributes.title[Object.keys(_manga.attributes.title)[0]],
+            chapterData.data.attributes.chapter
         );
+
         setTranslatedLanguage(chapterData.data.attributes.translatedLanguage);
-    }, [chapterData]);
+    }, [chapterData, updateChapter]);
 
     // logic to get the list of chapters
     useEffect(() => {
-        if (aggregateData === undefined) return;
+        if (isLoading || aggregateData === undefined) return;
 
         let _aggregate = [];
         let chapters = new Set();
         let currentChapter: string;
 
-        Object.keys(aggregateData.volumes).map(
-            (volumeKey, volumeIndex, volumeArray) => {
-                Object.keys(aggregateData.volumes[volumeKey].chapters).map(
-                    (chapterKey, chapterIndex, chapterArray) => {
-                        const chapterID =
-                            aggregateData.volumes[volumeKey].chapters[
-                                chapterKey
-                            ].id;
+        Object.keys(aggregateData.volumes).map((volumeKey) => {
+            Object.keys(aggregateData.volumes[volumeKey].chapters).map(
+                (chapterKey) => {
+                    const chapterID =
+                        aggregateData.volumes[volumeKey].chapters[chapterKey]
+                            .id;
 
-                        if (chapterID === params.id) {
-                            currentChapter = chapterKey;
-                        }
-
-                        if (!chapters.has(chapterKey)) {
-                            chapters.add(chapterKey);
-                            _aggregate.push({
-                                volume: volumeKey,
-                                chapter: chapterKey,
-                                chapterID: chapterID,
-                            });
-                        }
+                    if (chapterID === params.id) {
+                        currentChapter = chapterKey;
                     }
-                );
-            }
-        );
+
+                    if (!chapters.has(chapterKey)) {
+                        chapters.add(chapterKey);
+                        _aggregate.push({
+                            volume: volumeKey,
+                            chapter: chapterKey,
+                            chapterID: chapterID,
+                        });
+                    }
+                }
+            );
+        });
 
         _aggregate = _aggregate.reverse();
         setAggregate(_aggregate);
@@ -137,7 +158,7 @@ export default function ChapterPage({
                 setAggregateIndex(index);
             }
         });
-    }, [aggregateData]);
+    }, [aggregateData, isLoading, params.id]);
 
     // logic to get next/previous chapter link
     useEffect(() => {
@@ -148,13 +169,29 @@ export default function ChapterPage({
 
         setNextChapterID(next ? next.chapterID : "");
         setPreviousChapterID(prev ? prev.chapterID : "");
-    }, [aggregateIndex]);
+
+        updateNextLink(
+            next ? `/chapter/${next.chapterID}/1` : `/manga/${mangaID}`
+        );
+    }, [aggregate, aggregateIndex, mangaID, updateNextLink]);
 
     useEffect(() => {
         if (previousChapterData !== undefined) {
-            setPreviousChapterPages(previousChapterData.data.attributes.pages);
+            const _previousChapterPages =
+                previousChapterData.data.attributes.pages;
+            setPreviousChapterPages(_previousChapterPages);
+
+            updatePreviousLink(
+                `/chapter/${previousChapterID}/${_previousChapterPages}`
+            );
         }
-    }, [previousChapterData]);
+    }, [
+        previousChapterData,
+        nextChapterData,
+        nextChapterID,
+        previousChapterID,
+        updatePreviousLink,
+    ]);
 
     // toggle loading state
     useEffect(() => {
@@ -173,71 +210,83 @@ export default function ChapterPage({
         isPreviousChapterLoading,
     ]);
 
-    console.log(previousChapterID);
-    console.log(nextChapterID);
-    console.log(aggregateIndex);
+    if (isLoading)
+        return (
+            <>
+                <div className="flex w-screen items-center justify-center">
+                    <Skeleton className="h-screen w-[700px]" />
+                </div>
+            </>
+        );
 
     return (
-        <main>
-            <div className="w-screen h-screen" ref={ref}>
-                {!isLoading && (
-                    <>
-                        <Link
-                            href={
-                                previousChapterID
-                                    ? `/chapter/${previousChapterID}/${previousChapterPages}`
-                                    : `/manga/${mangaID}`
-                            }
-                            className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
-                            onClick={(e) => {
-                                if (page - 1 < 0 && !aggregateData) return;
-                                if (page - 1 < 0) return;
-                                e.preventDefault();
+        <>
+            <ChapterHeader />
+            <main>
+                <div className="max-w-screen min-h-screen" ref={ref}>
+                    {!isLoading && (
+                        <>
+                            <Link
+                                href={
+                                    previousChapterID
+                                        ? `/chapter/${previousChapterID}/${previousChapterPages}`
+                                        : `/manga/${mangaID}`
+                                }
+                                className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
+                                onClick={(e) => {
+                                    if (page - 1 < 0 && !aggregateData) return;
+                                    if (page - 1 < 0) return;
+                                    e.preventDefault();
 
-                                setPage(page - 1);
-                                window.history.replaceState(
-                                    null,
-                                    ``,
-                                    `${page}`
-                                );
-                                window.scrollTo({ top: ref.current.offsetTop });
-                            }}
-                            prefetch={true}
-                        ></Link>
+                                    setPage(page - 1);
+                                    window.history.replaceState(
+                                        null,
+                                        ``,
+                                        `${page}`
+                                    );
+                                    window.scrollTo({
+                                        top: ref.current.offsetTop,
+                                    });
+                                }}
+                                prefetch={false}
+                            />
 
-                        <Link
-                            href={
-                                nextChapterID !== ""
-                                    ? `/chapter/${nextChapterID}/1`
-                                    : `/manga/${mangaID}`
-                            }
-                            className="absolute h-full w-[50%] cursor-pointer z-1 left-[50%]"
-                            onClick={(e) => {
-                                if (
-                                    page + 1 >
-                                        atHomeData.chapter.data.length - 1 &&
-                                    !aggregateData
-                                )
-                                    return;
-                                if (
-                                    page + 1 >
-                                    atHomeData.chapter.data.length - 1
-                                )
-                                    return;
-                                e.preventDefault();
+                            <Link
+                                href={
+                                    nextChapterID !== ""
+                                        ? `/chapter/${nextChapterID}/1`
+                                        : `/manga/${mangaID}`
+                                }
+                                className="absolute h-full w-[50%] cursor-pointer z-1 left-[50%]"
+                                onClick={(e) => {
+                                    if (
+                                        page + 1 >
+                                            atHomeData.chapter.data.length -
+                                                1 &&
+                                        !aggregateData
+                                    )
+                                        return;
+                                    if (
+                                        page + 1 >
+                                        atHomeData.chapter.data.length - 1
+                                    )
+                                        return;
+                                    e.preventDefault();
 
-                                setPage(page + 1);
-                                window.history.replaceState(
-                                    null,
-                                    ``,
-                                    `${page + 2}`
-                                );
-                                window.scrollTo({ top: ref.current.offsetTop });
-                            }}
-                            prefetch={true}
-                        ></Link>
-                        <div className="flex items-center justify-center absolute z-1 bottom-[-95px] left-[50%] translate-x-[-50%]">
-                            {atHomeData !== undefined && (
+                                    setPage(page + 1);
+                                    window.history.replaceState(
+                                        null,
+                                        ``,
+                                        `${page + 2}`
+                                    );
+                                    window.scrollTo({
+                                        top: ref.current.offsetTop,
+                                    });
+                                }}
+                                prefetch={false}
+                            />
+
+                            <div className="fixed inset-x-0 max-w-max mx-auto bottom-2">
                                 <Progress
                                     value={
                                         atHomeData !== undefined
@@ -253,41 +302,43 @@ export default function ChapterPage({
                                         }
                                     )}
                                 />
-                            )}
-                        </div>
-
-                        {atHomeData !== undefined && (
-                            <div className="flex items-center justify-center">
-                                {atHomeData.chapter.data.map(
-                                    (filename, index) => {
-                                        const host = atHomeData.baseUrl;
-                                        const hash = atHomeData.chapter.hash;
-
-                                        return (
-                                            <Image
-                                                className={cn(
-                                                    "h-screen w-auto",
-                                                    {
-                                                        "visually-hidden":
-                                                            index !== page,
-                                                    }
-                                                )}
-                                                src={`${host}/data/${hash}/${filename}`}
-                                                key={index}
-                                                alt={`page ${page + 1}`}
-                                                width={0}
-                                                height={0}
-                                                sizes="100vh"
-                                                priority={true}
-                                            />
-                                        );
-                                    }
-                                )}
                             </div>
-                        )}
-                    </>
-                )}
-            </div>
-        </main>
+
+                            {atHomeData !== undefined && (
+                                <div className="flex items-center justify-center w-full">
+                                    {atHomeData.chapter.data.map(
+                                        (filename, index) => {
+                                            const host = atHomeData.baseUrl;
+                                            const hash =
+                                                atHomeData.chapter.hash;
+
+                                            return (
+                                                <Image
+                                                    className={cn(
+                                                        "h-screen w-auto object-contain",
+                                                        {
+                                                            "visually-hidden":
+                                                                index !== page,
+                                                        }
+                                                    )}
+                                                    src={`${host}/data/${hash}/${filename}`}
+                                                    key={index}
+                                                    alt={`page ${page + 1}`}
+                                                    width={0}
+                                                    height={0}
+                                                    sizes="100vh"
+                                                    priority={true}
+                                                    placeholder="empty"
+                                                />
+                                            );
+                                        }
+                                    )}
+                                </div>
+                            )}
+                        </>
+                    )}
+                </div>
+            </main>
+        </>
     );
 }

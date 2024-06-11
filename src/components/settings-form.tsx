@@ -1,11 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -22,12 +19,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { toast } from "@/components/ui/use-toast";
 import useSettingsStore from "@/stores/settingsStore";
-import { useTheme } from "./theme-provider";
+import { Theme, useTheme } from "./theme-provider";
+import { LANGUAGES } from "@/constants/languages";
 
 const FormSchema = z.object({
     theme: z.string(),
+    translatedLanguage: z.string(),
 });
 
 export function SettingsForm() {
@@ -35,7 +33,7 @@ export function SettingsForm() {
         resolver: zodResolver(FormSchema),
     });
 
-    const { theme, updateTheme } = useSettingsStore();
+    const { theme, updateTheme, updateTranslatedLanguage } = useSettingsStore();
     const { setTheme } = useTheme();
 
     return (
@@ -48,7 +46,7 @@ export function SettingsForm() {
                         <FormItem>
                             <FormLabel>Theme</FormLabel>
                             <Select
-                                onValueChange={(selectedTheme) => {
+                                onValueChange={(selectedTheme: Theme) => {
                                     localStorage.setItem(
                                         "ui-theme",
                                         selectedTheme
@@ -76,6 +74,46 @@ export function SettingsForm() {
                                     </SelectItem>
                                     <SelectItem value="light">Light</SelectItem>
                                     <SelectItem value="dark">Dark</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormDescription></FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="translatedLanguage"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Translated Language for Manga</FormLabel>
+                            <Select
+                                onValueChange={(selectedLanguage) => {
+                                    localStorage.setItem(
+                                        "translated-language",
+                                        selectedLanguage
+                                    );
+
+                                    updateTranslatedLanguage([
+                                        selectedLanguage,
+                                    ]);
+                                }}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue
+                                            placeholder={LANGUAGES.get(
+                                                localStorage.getItem(
+                                                    "translated-language"
+                                                ) ?? "en"
+                                            )}
+                                        />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="en">English</SelectItem>
+                                    <SelectItem value="ru">Russian</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormDescription></FormDescription>
