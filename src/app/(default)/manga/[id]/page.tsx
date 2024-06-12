@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChaptersFeed } from "@/components/chapters-feed";
+import { ChaptersFeed } from "@/components/manga-page/chapters-feed";
 
 import type { Metadata, ResolvingMetadata } from "next";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { SearchInput } from "@/components/search-input";
+import { SearchInput } from "@/components/header/search-input";
 import { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
 import { Settings } from "lucide-react";
@@ -21,7 +21,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { SettingsForm } from "./settings-form";
 
 export default function Header({ className }: ComponentProps<"div">) {

@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchAggregate, fetchAtHome, fetchChapter } from "@/api/chapter";
 import useChapterStore from "@/stores/chapterStore";
-import { ChapterHeader } from "@/components/chapter-header";
+import { ChapterHeader } from "@/components/chapter-page/chapter-header";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ChapterPage({

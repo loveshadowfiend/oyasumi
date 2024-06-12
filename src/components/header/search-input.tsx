@@ -1,7 +1,7 @@
 "use client";
 
 import useSearchStore from "@/stores/searchStore";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 

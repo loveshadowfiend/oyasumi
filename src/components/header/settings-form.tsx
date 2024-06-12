@@ -20,7 +20,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import useSettingsStore from "@/stores/settingsStore";
-import { Theme, useTheme } from "./theme-provider";
+import { Theme, useTheme } from "../providers/theme-provider";
 import { LANGUAGES } from "@/constants/languages";
 
 const FormSchema = z.object({

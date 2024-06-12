@@ -1,9 +1,9 @@
-import Header from "@/components/header";
-import QueryProvider from "@/components/tanstack/query-provider";
+import Header from "@/components/header/header";
+import QueryProvider from "@/components/providers/query-provider";
 import { cn } from "@/lib/utils";
 import { Inter as FontSans } from "next/font/google";
 import "@/app/globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

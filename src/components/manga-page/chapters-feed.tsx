@@ -15,7 +15,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { fetchFeed } from "@/api/feed";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 import useSettingsStore from "@/stores/settingsStore";
 
 interface ChaptersFeedProps {
