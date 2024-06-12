@@ -28,12 +28,12 @@ export default function Header({ className }: ComponentProps<"div">) {
     return (
         <header
             className={cn(
-                "flex flex-row items-center justify-between h-[100px] mb-5",
+                "flex flex-row items-center justify-between h-[100px] mb-5 px-[30px] border-b-[0.5px] md:px-[40px] lg:px-[100px]",
                 className
             )}
         >
             <Link href="/">
-                <span className="text-4xl font-bold">oyasumi</span>
+                <span className="text-2xl font-bold md:text-4xl">oyasumi</span>
             </Link>
             <div className="flex flex-row items-center gap-4">
                 <SearchInput />

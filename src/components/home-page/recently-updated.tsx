@@ -22,27 +22,27 @@ export default function RecentlyUpdated() {
                     // TODO: kill this with fire
                     <>
                         <div className="flex flex-col gap-2">
-                            <Skeleton className="w-[200px] h-[255px]" />
+                            <Skeleton className="w-auto h-[300px]" />
                             <Skeleton className="w-full h-[20px]" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Skeleton className="w-[200px] h-[255px]" />
+                            <Skeleton className="w-auto h-[300px]" />
                             <Skeleton className="w-full h-[20px]" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Skeleton className="w-[200px] h-[255px]" />
+                            <Skeleton className="w-auto h-[300px]" />
                             <Skeleton className="w-full h-[20px]" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Skeleton className="w-[200px] h-[255px]" />
+                            <Skeleton className="w-auto h-[300px]" />
                             <Skeleton className="w-full h-[20px]" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Skeleton className="w-[200px] h-[255px]" />
+                            <Skeleton className="w-auto h-[300px]" />
                             <Skeleton className="w-full h-[20px]" />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <Skeleton className="w-[200px] h-[255px]" />
+                            <Skeleton className="w-auto h-[300px]" />
                             <Skeleton className="w-full h-[20px]" />
                         </div>
                     </>
@@ -65,7 +65,7 @@ export default function RecentlyUpdated() {
                             <Link key={index} href={`manga/${mangaId}`}>
                                 <div className="flex flex-col gap-1">
                                     <Image
-                                        className="object-cover w-[200px] h-[255px] rounded-md"
+                                        className="object-cover w-auto h-[300px] rounded-md"
                                         src={coverUrl}
                                         alt={`${mangaTitle} cover`}
                                         width={200}

@@ -117,7 +117,7 @@ export default function ChapterPage({
         );
 
         setTranslatedLanguage(chapterData.data.attributes.translatedLanguage);
-    }, [chapterData, updateChapter]);
+    }, [chapterData, updateChapter, isLoading]);
 
     // logic to get the list of chapters
     useEffect(() => {
@@ -125,7 +125,6 @@ export default function ChapterPage({
 
         let _aggregate = [];
         let chapters = new Set();
-        let currentChapter: string;
 
         Object.keys(aggregateData.volumes).map((volumeKey) => {
             Object.keys(aggregateData.volumes[volumeKey].chapters).map(
@@ -133,10 +132,6 @@ export default function ChapterPage({
                     const chapterID =
                         aggregateData.volumes[volumeKey].chapters[chapterKey]
                             .id;
-
-                    if (chapterID === params.id) {
-                        currentChapter = chapterKey;
-                    }
 
                     if (!chapters.has(chapterKey)) {
                         chapters.add(chapterKey);
@@ -154,11 +149,11 @@ export default function ChapterPage({
         setAggregate(_aggregate);
 
         _aggregate.forEach((chapter, index) => {
-            if (chapter.chapter === currentChapter) {
+            if (chapterData.data.attributes.chapter === chapter.chapter) {
                 setAggregateIndex(index);
             }
         });
-    }, [aggregateData, isLoading, params.id]);
+    }, [aggregateData, chapterData, isLoading, params.id]);
 
     // logic to get next/previous chapter link
     useEffect(() => {
@@ -199,7 +194,8 @@ export default function ChapterPage({
             !isAggregateLoading &&
             !isAtHomeLoading &&
             !isChapterLoading &&
-            !isPreviousChapterLoading
+            !isPreviousChapterLoading &&
+            !isNextChapterLoading
         ) {
             setIsLoading(false);
         }
@@ -208,6 +204,7 @@ export default function ChapterPage({
         isAtHomeLoading,
         isChapterLoading,
         isPreviousChapterLoading,
+        isNextChapterLoading,
     ]);
 
     if (isLoading)
@@ -218,6 +215,11 @@ export default function ChapterPage({
                 </div>
             </>
         );
+
+    console.log(aggregate);
+    console.log(aggregateIndex);
+    console.log(translatedLanguage);
+    console.log(chapterData.data.attributes.chapter);
 
     return (
         <>
@@ -248,7 +250,6 @@ export default function ChapterPage({
                                         top: ref.current.offsetTop,
                                     });
                                 }}
-                                prefetch={false}
                             />
 
                             <Link
@@ -283,7 +284,6 @@ export default function ChapterPage({
                                         top: ref.current.offsetTop,
                                     });
                                 }}
-                                prefetch={false}
                             />
 
                             <div className="fixed inset-x-0 max-w-max mx-auto bottom-2">

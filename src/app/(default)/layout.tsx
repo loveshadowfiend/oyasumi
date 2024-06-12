@@ -32,7 +32,7 @@ export default function DefaultLayout({
                 >
                     <QueryProvider>
                         <div className="pb-5">
-                            <Header className="px-[100px] border-b-[0.5px]" />
+                            <Header />
                             <div className="px-[100px]">{children}</div>
                         </div>
                     </QueryProvider>
