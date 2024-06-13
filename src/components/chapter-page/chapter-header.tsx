@@ -28,10 +28,13 @@ export const ChapterHeader = (props: React.ComponentProps<"div">) => {
         <header className={cn("h-[75px] border-b-[1px]", props.className)}>
             <div className="flex justify-center items-center h-full px-[20px] md:px-[60px] xl:px-[100px]">
                 <div className="flex-1">
-                    <Link className="font-bold" href={`/manga/${mangaID}`}>
+                    <Link
+                        className="text-sm font-bold md:text-md"
+                        href={`/manga/${mangaID}`}
+                    >
                         {mangaTitle}
                     </Link>
-                    <span className="pl-[20px] text-sm">
+                    <span className="hidden pl-[20px] text-sm md:inline">
                         Chapter {chapterNumber}
                     </span>
                 </div>

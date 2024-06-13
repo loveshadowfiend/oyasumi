@@ -20,8 +20,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import useSettingsStore from "@/stores/settingsStore";
-import { Theme, useTheme } from "../providers/theme-provider";
 import { LANGUAGES } from "@/constants/languages";
+import { useTheme } from "next-themes";
 
 const FormSchema = z.object({
     theme: z.string(),
@@ -46,13 +46,7 @@ export function SettingsForm() {
                         <FormItem>
                             <FormLabel>Theme</FormLabel>
                             <Select
-                                onValueChange={(selectedTheme: Theme) => {
-                                    localStorage.setItem(
-                                        "ui-theme",
-                                        selectedTheme
-                                    );
-
-                                    updateTheme(selectedTheme);
+                                onValueChange={(selectedTheme: string) => {
                                     setTheme(selectedTheme);
                                 }}
                                 defaultValue={field.value}

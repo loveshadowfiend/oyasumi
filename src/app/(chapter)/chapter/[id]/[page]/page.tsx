@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { usePathname } from "next/navigation";
 import useLatestMangaStore from "@/stores/latestMangaStore";
 import useChapterSettingsStore from "@/stores/chapterSettingsStore";
+import { fetchMangaByID } from "@/api/manga";
 
 export default function ChapterPage({
     params,
@@ -87,13 +88,22 @@ export default function ChapterPage({
         refetchOnWindowFocus: false,
     });
 
+    const { data: mangaData, isLoading: isMangaLoading } = useQuery({
+        enabled: !!mangaID,
+        queryKey: ["manga", mangaID],
+        queryFn: () => fetchMangaByID(mangaID),
+        refetchOnWindowFocus: false,
+    });
+
     useEffect(() => {
         setPage(params.page - 1);
     }, []);
 
     useEffect(() => {
-        updateLatestPage(pathname);
-    }, [page, pathname, updateLatestPage]);
+        if (isLoading) return;
+
+        updateLatestPage(mangaID, pathname);
+    }, [page, pathname, updateLatestPage, isLoading, mangaID]);
 
     useEffect(() => {
         setIsProgressHidden(false);

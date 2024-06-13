@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { fetchFeed } from "@/api/feed";
@@ -26,6 +26,7 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
     const { translatedLanguage } = useSettingsStore();
     const [orderChapter, setOrderChapter] = useState<"asc" | "desc">("desc");
     const [page, setPage] = useState(0);
+    const [feed, setFeed] = useState<any[]>([]);
 
     const chapters = new Set();
 
@@ -73,6 +74,28 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
         );
     }
 
+    useEffect(() => {
+        if (feedData === undefined) return;
+
+        let _feed: any[] = [];
+        feedData.data.map((chapter) => {
+            const element = {
+                id: chapter.id,
+                attributes: {
+                    chapter: chapter.attributes.chapter,
+                    translatedLanguage: chapter.attributes.translatedLanguage,
+                    pages: chapter.attributes.pages,
+                },
+            };
+
+            if (!element.attributes.pages) return;
+
+            _feed.push(element);
+        });
+
+        setFeed(_feed);
+    }, [feedData]);
+
     if (isLoading) {
         return <Skeleton className="w-full h-[500px]"></Skeleton>;
     }
@@ -112,8 +135,8 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
                     </div>
                 </TableCaption>
                 <TableBody>
-                    {feedData !== undefined &&
-                        feedData.data.map((chapter, index) => {
+                    {feed.length > 0 &&
+                        feed.map((chapter, index) => {
                             if (
                                 chapters.has(chapter.attributes.chapter) ||
                                 !chapter.attributes.pages

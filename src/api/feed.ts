@@ -6,7 +6,7 @@ export const fetchFeed = async (
     limit: number
 ) => {
     const response = await fetch(
-        `https://api.mangadex.org/manga/${mangaID}/feed?order[chapter]=${orderChapter}&offset=${offset}&translatedLanguage[]=${translatedLanguage}&limit=${limit}`
+        `https://api.mangadex.org/manga/${mangaID}/feed?order[chapter]=${orderChapter}&offset=${offset}&translatedLanguage[]=${translatedLanguage}&limit=${limit}&includeEmptyPages=0`
     );
     const data = await response.json();
 

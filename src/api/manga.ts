@@ -10,6 +10,16 @@ export const fetchMangaByTitle = async (title: string) => {
     return data;
 };
 
+export const fetchMangaByID = async (id: string) => {
+    const response = await fetch(
+        `https://api.mangadex.org/manga/${mangaID}?includes[]=cover_art`
+    );
+
+    const data = await response.json();
+
+    return data;
+};
+
 export const fetchPopularNewTitles = async () => {
     const response = await fetch(
         `https://api.mangadex.org/manga?order[followedCount]=desc&limit=10&includes[]=cover_art&createdAtSince=${getSixMonthAgo()}`
@@ -22,7 +32,7 @@ export const fetchPopularNewTitles = async () => {
 
 export const fetchRecentlyUpdated = async () => {
     const response = await fetch(
-        `https://api.mangadex.org/manga?order[createdAt]=desc&limit=6&includes[]=cover_art`
+        `https://api.mangadex.org/manga?order[createdAt]=desc&limit=6&includes[]=cover_art&contentRating[]=safe`
     );
     const data = await response.json();
 

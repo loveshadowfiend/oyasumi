@@ -23,16 +23,20 @@ export default function DefaultLayout({
     children: React.ReactNode;
 }) {
     return (
-        <ThemeProvider defaultTheme="dark" storageKey="ui-theme">
-            <html lang="en">
-                <body
-                    className={cn(
-                        "min-h-screen bg-background font-sans antialiased",
-                        fontSans.variable
-                    )}
+        <html lang="en" suppressHydrationWarning>
+            <body>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
                 >
                     <QueryProvider>
-                        <div className="pb-5">
+                        <div
+                            className={cn(
+                                "min-h-screen bg-background font-sans antialiased pb-5",
+                                fontSans.variable
+                            )}
+                        >
                             <Header />
                             <div className="px-[20px] lg:px-[100px]">
                                 {children}
@@ -40,8 +44,8 @@ export default function DefaultLayout({
                         </div>
                         <Toaster />
                     </QueryProvider>
-                </body>
-            </html>
-        </ThemeProvider>
+                </ThemeProvider>
+            </body>
+        </html>
     );
 }

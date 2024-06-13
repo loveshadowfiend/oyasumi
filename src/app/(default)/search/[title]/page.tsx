@@ -24,9 +24,9 @@ export default function SearchResults() {
     for (let i = 0; i < 10; i++) {
         skeletons.push(
             <div className="flex gap-5 p-3">
-                <Skeleton className="min-w-[256px] h-[400px]" />
+                <Skeleton className="hidden min-w-[256px] h-[400px] md:inline" />
                 <div className="flex flex-col gap-3 w-full">
-                    <Skeleton className="h-[24px] w-[400px]" />
+                    <Skeleton className="w-full h-[24px] md:w-[400px]" />
                     <Skeleton className="h-[200px] w-[100%]" />
                 </div>
             </div>
@@ -47,7 +47,7 @@ export default function SearchResults() {
 
     return (
         <main className="overflow-auto">
-            <div className="flex flex-col gap-3">
+            <div className="md:flex md:flex-col gap-3">
                 {searchData !== undefined &&
                     searchData.data.map((manga, index) => {
                         const mangaId = manga.id;
@@ -69,7 +69,7 @@ export default function SearchResults() {
                                 className="flex p-3 gap-5"
                             >
                                 <Image
-                                    className="rounded-md min-w-[256px]"
+                                    className="hidden rounded-md min-w-[256px] md:inline"
                                     src={coverUrl}
                                     alt={`${mangaTitle} cover`}
                                     width={256}

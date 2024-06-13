@@ -24,8 +24,6 @@ export const SearchInput = (props: SearchProps) => {
         updateFetchSubmit("");
     }, [fetchSubmit, router, toggleDialog, updateFetchSubmit]);
 
-    console.log(isDialogOpen);
-
     return (
         <form
             className={cn("w-[300px]", props.className)}

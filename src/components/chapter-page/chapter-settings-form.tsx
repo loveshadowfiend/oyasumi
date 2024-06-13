@@ -21,8 +21,8 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import useSettingsStore from "@/stores/settingsStore";
-import { Theme, useTheme } from "../providers/theme-provider";
 import useChapterSettingsStore from "@/stores/chapterSettingsStore";
+import { useTheme } from "next-themes";
 
 const FormSchema = z.object({
     isProgressActive: z.boolean(),
@@ -69,13 +69,7 @@ export function ChapterSettingsForm() {
                         <FormItem>
                             <FormLabel>Theme</FormLabel>
                             <Select
-                                onValueChange={(selectedTheme: Theme) => {
-                                    localStorage.setItem(
-                                        "ui-theme",
-                                        selectedTheme
-                                    );
-
-                                    updateTheme(selectedTheme);
+                                onValueChange={(selectedTheme: string) => {
                                     setTheme(selectedTheme);
                                 }}
                                 defaultValue={field.value}

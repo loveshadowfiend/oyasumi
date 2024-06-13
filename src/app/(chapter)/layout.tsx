@@ -6,6 +6,11 @@ import "@/app/globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ChapterHeader } from "@/components/chapter-page/chapter-header";
 
+export const metadata: Metadata = {
+    title: "oyasumi",
+    description: "oyasumi — manga reading web app powered by mangadex!",
+};
+
 const fontSans = FontSans({
     subsets: ["latin"],
     variable: "--font-sans",
@@ -17,7 +22,7 @@ export default function ChapterLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html lang="en" suppressHydrationWarning>
             <body
                 className={cn(
                     "min-h-screen bg-background font-sans antialiased",
@@ -25,7 +30,11 @@ export default function ChapterLayout({
                 )}
             >
                 <QueryProvider>
-                    <ThemeProvider defaultTheme="dark" storageKey="ui-theme">
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                    >
                         {children}
                     </ThemeProvider>
                 </QueryProvider>
