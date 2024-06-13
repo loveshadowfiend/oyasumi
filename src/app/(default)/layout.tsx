@@ -5,6 +5,7 @@ import { Inter as FontSans } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
     title: "oyasumi",
@@ -33,8 +34,11 @@ export default function DefaultLayout({
                     <QueryProvider>
                         <div className="pb-5">
                             <Header />
-                            <div className="px-[100px]">{children}</div>
+                            <div className="px-[20px] lg:px-[100px]">
+                                {children}
+                            </div>
                         </div>
+                        <Toaster />
                     </QueryProvider>
                 </body>
             </html>

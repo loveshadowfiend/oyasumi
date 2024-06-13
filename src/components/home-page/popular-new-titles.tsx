@@ -25,10 +25,11 @@ export default function PopularNewTitles() {
     const imageWidth = 250,
         imageHeight = 355;
 
-    if (isLoading) return <Skeleton className={`w-full h-[355px]`} />;
+    if (isLoading)
+        return <Skeleton className={`hidden lg:flex w-full h-[355px]`} />;
 
     return (
-        <div className="flex flex-col gap-3 w-full">
+        <div className="hidden lg:flex flex-col gap-3 w-full">
             {/* <h3 className="font-semibold text-lg">Popular New Titles</h3> */}
             <Carousel
                 className="flex items-center justify-center"

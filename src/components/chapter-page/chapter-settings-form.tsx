@@ -19,26 +19,49 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import useSettingsStore from "@/stores/settingsStore";
 import { Theme, useTheme } from "../providers/theme-provider";
-import { LANGUAGES } from "@/constants/languages";
+import useChapterSettingsStore from "@/stores/chapterSettingsStore";
 
 const FormSchema = z.object({
+    isProgressActive: z.boolean(),
     theme: z.string(),
-    translatedLanguage: z.string(),
 });
 
-export function SettingsForm() {
+export function ChapterSettingsForm() {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     });
 
-    const { theme, updateTheme, updateTranslatedLanguage } = useSettingsStore();
+    const { theme, updateTheme } = useSettingsStore();
+    const { isProgressActive, toggleIsProgressActive } =
+        useChapterSettingsStore();
     const { setTheme } = useTheme();
 
     return (
         <Form {...form}>
             <form className="w-full space-y-6">
+                <FormField
+                    control={form.control}
+                    name="isProgressActive"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Show progress bar</FormLabel>
+                            <FormControl>
+                                <Checkbox
+                                    className="ml-3"
+                                    defaultChecked={isProgressActive}
+                                    onClick={() => {
+                                        toggleIsProgressActive();
+                                    }}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                            <FormDescription></FormDescription>
+                        </FormItem>
+                    )}
+                />
                 <FormField
                     control={form.control}
                     name="theme"
@@ -74,46 +97,6 @@ export function SettingsForm() {
                                     </SelectItem>
                                     <SelectItem value="light">Light</SelectItem>
                                     <SelectItem value="dark">Dark</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormDescription></FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="translatedLanguage"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Translated Language for Manga</FormLabel>
-                            <Select
-                                onValueChange={(selectedLanguage) => {
-                                    localStorage.setItem(
-                                        "translated-language",
-                                        selectedLanguage
-                                    );
-
-                                    updateTranslatedLanguage([
-                                        selectedLanguage,
-                                    ]);
-                                }}
-                                defaultValue={field.value}
-                            >
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue
-                                            placeholder={LANGUAGES.get(
-                                                localStorage.getItem(
-                                                    "translated-language"
-                                                ) ?? "en"
-                                            )}
-                                        />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    <SelectItem value="en">English</SelectItem>
-                                    <SelectItem value="ru">Russian</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormDescription></FormDescription>

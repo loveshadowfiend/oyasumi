@@ -13,6 +13,8 @@ export default function RecentlyUpdated() {
         queryFn: () => fetchRecentlyUpdated(),
     });
 
+    if (!localStorage.getItem("latest-manga-store")) return;
+
     if (isLoading) {
         return (
             <div>
@@ -57,9 +59,7 @@ export default function RecentlyUpdated() {
 
     return (
         <div>
-            <h3 className="font-semibold text-lg pb-3">
-                Recently Updated Titles
-            </h3>
+            <h3 className="font-semibold text-lg pb-3">Latest Read</h3>
             <ScrollArea className="w-full whitespace-nowrap">
                 <div
                     className="flex w-max space-x-4 pb-3

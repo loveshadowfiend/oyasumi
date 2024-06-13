@@ -9,7 +9,10 @@ interface ChapterStore {
     nextChapterLink: string;
     previousChapterLink: string;
 
+    latestLink: string;
+
     updateChapter: (id: string, title: string, number: string) => void;
+
     updateNextLink: (next: string) => void;
     updatePreviousLink: (prev: string) => void;
 }
@@ -23,9 +26,12 @@ const useChapterStore = create<ChapterStore>()(
         nextChapterLink: "",
         previousChapterLink: "",
 
+        latestLink: "",
+
         updateChapter: (id: string, title: string, number: string) => {
             set({ mangaID: id, mangaTitle: title, chapterNumber: number });
         },
+
         updateNextLink: (next: string) => {
             set({ nextChapterLink: next });
         },

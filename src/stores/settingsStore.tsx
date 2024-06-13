@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface SettingsStore {
     theme: string;
@@ -8,16 +9,24 @@ interface SettingsStore {
     updateTranslatedLanguage: (language: string[]) => void;
 }
 
-const useSettingsStore = create<SettingsStore>()((set) => ({
-    theme: localStorage.getItem("ui-theme") ?? "system",
-    translatedLanguage: [localStorage.getItem("translated-language") ?? "en"],
+const useSettingsStore = create<SettingsStore>()(
+    persist(
+        (set) => ({
+            theme: "system",
+            translatedLanguage: ["en"],
 
-    updateTheme: (theme: string) => {
-        set({ theme: theme });
-    },
-    updateTranslatedLanguage: (language: string[]) => {
-        set({ translatedLanguage: language });
-    },
-}));
+            updateTheme: (theme: string) => {
+                set({ theme: theme });
+            },
+            updateTranslatedLanguage: (language: string[]) => {
+                set({ translatedLanguage: language });
+            },
+        }),
+        {
+            name: "settings-store",
+            storage: createJSONStorage(() => localStorage),
+        }
+    )
+);
 
 export default useSettingsStore;

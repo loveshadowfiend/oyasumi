@@ -6,6 +6,14 @@ import { Settings } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { ArrowRight, ArrowLeft } from "lucide-react";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "../ui/dialog";
+import { ChapterSettingsForm } from "./chapter-settings-form";
 
 export const ChapterHeader = (props: React.ComponentProps<"div">) => {
     const {
@@ -18,7 +26,7 @@ export const ChapterHeader = (props: React.ComponentProps<"div">) => {
 
     return (
         <header className={cn("h-[75px] border-b-[1px]", props.className)}>
-            <div className="flex justify-center items-center h-full px-[100px]">
+            <div className="flex justify-center items-center h-full px-[20px] md:px-[60px] xl:px-[100px]">
                 <div className="flex-1">
                     <Link className="font-bold" href={`/manga/${mangaID}`}>
                         {mangaTitle}
@@ -35,7 +43,19 @@ export const ChapterHeader = (props: React.ComponentProps<"div">) => {
                     <Link href={nextChapterLink}>
                         <ArrowRight />
                     </Link>
-                    <Settings className="flex-1" />
+                    <Dialog>
+                        <DialogTrigger>
+                            <Settings className="flex-1" />
+                        </DialogTrigger>
+                        <DialogContent className="w-[80vw]">
+                            <DialogHeader>
+                                <DialogTitle>Settings</DialogTitle>
+                                <div className="w-full pt-4">
+                                    <ChapterSettingsForm />
+                                </div>
+                            </DialogHeader>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
         </header>

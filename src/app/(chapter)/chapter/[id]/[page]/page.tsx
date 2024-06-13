@@ -4,13 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
-
 import Image from "next/image";
 import Link from "next/link";
 import { fetchAggregate, fetchAtHome, fetchChapter } from "@/api/chapter";
 import useChapterStore from "@/stores/chapterStore";
 import { ChapterHeader } from "@/components/chapter-page/chapter-header";
 import { Skeleton } from "@/components/ui/skeleton";
+import { usePathname } from "next/navigation";
+import useLatestMangaStore from "@/stores/latestMangaStore";
+import useChapterSettingsStore from "@/stores/chapterSettingsStore";
 
 export default function ChapterPage({
     params,
@@ -25,6 +27,9 @@ export default function ChapterPage({
         updateNextLink,
         updatePreviousLink,
     } = useChapterStore();
+
+    const { updateLatestPage } = useLatestMangaStore();
+    const { isProgressActive } = useChapterSettingsStore();
 
     const [translatedLanguage, setTranslatedLanguage] = useState(["en"]);
 
@@ -41,6 +46,8 @@ export default function ChapterPage({
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const ref = useRef(null);
+
+    const pathname = usePathname();
 
     const { data: atHomeData, isLoading: isAtHomeLoading } = useQuery({
         enabled: !!params.id,
@@ -83,6 +90,10 @@ export default function ChapterPage({
     useEffect(() => {
         setPage(params.page - 1);
     }, []);
+
+    useEffect(() => {
+        updateLatestPage(pathname);
+    }, [page, pathname, updateLatestPage]);
 
     useEffect(() => {
         setIsProgressHidden(false);
@@ -216,11 +227,6 @@ export default function ChapterPage({
             </>
         );
 
-    console.log(aggregate);
-    console.log(aggregateIndex);
-    console.log(translatedLanguage);
-    console.log(chapterData.data.attributes.chapter);
-
     return (
         <>
             <ChapterHeader />
@@ -229,11 +235,7 @@ export default function ChapterPage({
                     {!isLoading && (
                         <>
                             <Link
-                                href={
-                                    previousChapterID
-                                        ? `/chapter/${previousChapterID}/${previousChapterPages}`
-                                        : `/manga/${mangaID}`
-                                }
+                                href={previousChapterLink}
                                 className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
                                 onClick={(e) => {
                                     if (page - 1 < 0 && !aggregateData) return;
@@ -253,11 +255,7 @@ export default function ChapterPage({
                             />
 
                             <Link
-                                href={
-                                    nextChapterID !== ""
-                                        ? `/chapter/${nextChapterID}/1`
-                                        : `/manga/${mangaID}`
-                                }
+                                href={nextChapterLink}
                                 className="absolute h-full w-[50%] cursor-pointer z-1 left-[50%]"
                                 onClick={(e) => {
                                     if (
@@ -286,7 +284,12 @@ export default function ChapterPage({
                                 }}
                             />
 
-                            <div className="fixed inset-x-0 max-w-max mx-auto bottom-2">
+                            <div
+                                className={cn(
+                                    "fixed inset-x-0 max-w-max mx-auto bottom-2",
+                                    { hidden: !isProgressActive }
+                                )}
+                            >
                                 <Progress
                                     value={
                                         atHomeData !== undefined

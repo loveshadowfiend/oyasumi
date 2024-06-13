@@ -3,8 +3,8 @@ import { Star } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChaptersFeed } from "@/components/manga-page/chapters-feed";
-
 import type { Metadata, ResolvingMetadata } from "next";
+import { AddToLibraryButton } from "@/components/manga-page/add-to-library-button";
 
 type Props = {
     params: { id: string };
@@ -68,7 +68,7 @@ export default async function MangaPage({
                     height={400}
                     alt={`${mangaData.data.attributes.title.en}`}
                 />
-                <Button className="w-full">Add to Library</Button>
+                <AddToLibraryButton />
                 <Card>
                     <CardContent className="flex flex-col gap-3 p-3 text-sm">
                         <div>
