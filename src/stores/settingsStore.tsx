@@ -1,12 +1,11 @@
-import { Theme } from "@/components/providers/theme-provider";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 interface SettingsStore {
-    theme: Theme;
+    theme: string;
     translatedLanguage: string[];
 
-    updateTheme: (theme: Theme) => void;
+    updateTheme: (theme: string) => void;
     updateTranslatedLanguage: (language: string[]) => void;
 }
 
@@ -16,7 +15,7 @@ const useSettingsStore = create<SettingsStore>()(
             theme: "system",
             translatedLanguage: ["en"],
 
-            updateTheme: (theme: Theme) => {
+            updateTheme: (theme: string) => {
                 set({ theme: theme });
             },
             updateTranslatedLanguage: (language: string[]) => {

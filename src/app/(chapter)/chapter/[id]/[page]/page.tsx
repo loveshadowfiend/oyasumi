@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 import useLatestMangaStore from "@/stores/latestMangaStore";
 import useChapterSettingsStore from "@/stores/chapterSettingsStore";
 import { fetchMangaByID } from "@/api/manga";
+import { Button } from "@/components/ui/button";
 
 export default function ChapterPage({
     params,
@@ -29,7 +30,7 @@ export default function ChapterPage({
         updatePreviousLink,
     } = useChapterStore();
 
-    const { updateLatestPage } = useLatestMangaStore();
+    const { updateLatestPage, updateLatestMangas } = useLatestMangaStore();
     const { isProgressActive } = useChapterSettingsStore();
 
     const [translatedLanguage, setTranslatedLanguage] = useState(["en"]);
@@ -209,6 +210,27 @@ export default function ChapterPage({
         updatePreviousLink,
     ]);
 
+    useEffect(() => {
+        if (isLoading || !mangaData) return;
+
+        const coverFileName =
+            mangaData.data.relationships.filter((rel: { type: string }) => {
+                return rel.type == "cover_art";
+            })[0].attributes?.fileName ?? "";
+
+        const coverUrl = `https://uploads.mangadex.org/covers/${mangaData.data.id}/${coverFileName}.512.jpg`;
+
+        const mangaTitle =
+            mangaData.data.attributes.title.en ??
+            mangaData.data.attributes.title.ja ??
+            mangaData.data.attributes.title["ja-ro"] ??
+            mangaData.data.attributes.title[
+                Object.keys(mangaData.data.attributes.title)[0]
+            ];
+
+        updateLatestMangas(mangaID, pathname, mangaTitle, coverUrl);
+    }, [isLoading, mangaData]);
+
     // toggle loading state
     useEffect(() => {
         if (
@@ -216,7 +238,8 @@ export default function ChapterPage({
             !isAtHomeLoading &&
             !isChapterLoading &&
             !isPreviousChapterLoading &&
-            !isNextChapterLoading
+            !isNextChapterLoading &&
+            !isMangaLoading
         ) {
             setIsLoading(false);
         }
@@ -226,16 +249,37 @@ export default function ChapterPage({
         isChapterLoading,
         isPreviousChapterLoading,
         isNextChapterLoading,
+        isMangaLoading,
     ]);
 
     if (isLoading)
         return (
+            <div className="flex w-screen items-center justify-center">
+                <Skeleton className="h-screen w-[700px]" />
+            </div>
+        );
+
+    if (chapterData.data.attributes.externalUrl) {
+        return (
             <>
-                <div className="flex w-screen items-center justify-center">
-                    <Skeleton className="h-screen w-[700px]" />
+                <ChapterHeader />
+                <div className="w-screen h-[80vh]">
+                    <div className="flex flex-col w-full h-full items-center justify-center gap-3">
+                        <p>
+                            This chapter is only available at external website
+                        </p>
+                        <Button>
+                            <Link
+                                href={chapterData.data.attributes.externalUrl}
+                            >
+                                Take me there!
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
             </>
         );
+    }
 
     return (
         <>

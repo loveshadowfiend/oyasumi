@@ -1,102 +1,47 @@
 "use client";
 
-import { fetchRecentlyUpdated } from "@/api/manga";
-import { useQuery } from "@tanstack/react-query";
-import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import useLatestMangaStore from "@/stores/latestMangaStore";
+import { useEffect, useState } from "react";
 
-export default function RecentlyUpdated() {
-    const { data, isLoading } = useQuery({
-        queryKey: ["recentlyUpdated"],
-        queryFn: () => fetchRecentlyUpdated(),
-    });
+export default function LatestRead() {
+    const { latestMangas } = useLatestMangaStore();
 
-    if (!localStorage.getItem("latest-manga-store")) return;
-
-    if (isLoading) {
-        return (
-            <div>
-                <h3 className="font-semibold text-lg pb-3">
-                    Recently Updated Titles
-                </h3>
-                <ScrollArea className="w-full whitespace-nowrap">
-                    <div
-                        className="flex w-max space-x-4 pb-3 
-                                xl:grid xl:grid-cols-6 xl:gap-3 xl:w-full"
-                    >
-                        <div className="flex flex-col gap-2">
-                            <Skeleton className="w-auto h-[300px]" />
-                            <Skeleton className="w-full h-[20px]" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <Skeleton className="w-auto h-[300px]" />
-                            <Skeleton className="w-full h-[20px]" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <Skeleton className="w-auto h-[300px]" />
-                            <Skeleton className="w-full h-[20px]" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <Skeleton className="w-auto h-[300px]" />
-                            <Skeleton className="w-full h-[20px]" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <Skeleton className="w-auto h-[300px]" />
-                            <Skeleton className="w-full h-[20px]" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <Skeleton className="w-auto h-[300px]" />
-                            <Skeleton className="w-full h-[20px]" />
-                        </div>
-                    </div>
-                    <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-            </div>
-        );
-    }
+    if (latestMangas.length <= 1) return;
 
     return (
         <div>
-            <h3 className="font-semibold text-lg pb-3">Latest Read</h3>
+            <h3 className="font-semibold text-lg pb-3">Recent reads</h3>
             <ScrollArea className="w-full whitespace-nowrap">
                 <div
                     className="flex w-max space-x-4 pb-3
                                 xl:grid xl:grid-cols-6 xl:w-full"
                 >
-                    {data.data.map((manga, index) => {
-                        const mangaId = manga.id;
-                        const mangaTitle =
-                            manga.attributes.title.en ??
-                            manga.attributes.title["ja-ro"] ??
-                            manga.attributes.title.ja;
-                        const coverFileName = manga.relationships.filter(
-                            (rel: { type: string }) => {
-                                return rel.type == "cover_art";
-                            }
-                        )[0].attributes?.fileName;
-                        const coverUrl = `https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}.512.jpg`;
+                    {[...latestMangas].reverse().map((manga, index) => {
+                        if (manga.mangaID === "") return;
+
+                        const coverURL = manga.coverURL;
+                        const mangaTitle = manga.mangaTitle;
+                        const pathname = manga.pathname;
 
                         return (
                             <Link
                                 className="w-[200px] xl:w-auto"
                                 key={index}
-                                href={`manga/${mangaId}`}
+                                href={pathname}
                             >
                                 <div className="flex flex-col gap-1 break-normal">
                                     <Image
                                         className="object-cover w-auto h-[300px] rounded-md"
-                                        src={coverUrl}
+                                        src={coverURL}
                                         alt={`${mangaTitle} cover`}
                                         width={200}
                                         height={300}
                                     />
                                     <p className="text-[14px] font-medium truncate">
-                                        {`${mangaTitle.substr(0, 40)}` +
-                                            (mangaTitle.length > 40
-                                                ? "..."
-                                                : "")}
+                                        {mangaTitle}
                                     </p>
                                 </div>
                             </Link>

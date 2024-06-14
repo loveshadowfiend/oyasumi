@@ -33,7 +33,8 @@ export function SettingsForm() {
         resolver: zodResolver(FormSchema),
     });
 
-    const { theme, updateTheme, updateTranslatedLanguage } = useSettingsStore();
+    const theme = localStorage.getItem("theme") ?? "system";
+    const { updateTranslatedLanguage } = useSettingsStore();
     const { setTheme } = useTheme();
 
     return (

@@ -59,10 +59,10 @@ export default async function MangaPage({
     const statisticsData = await statisticsResponse.json();
 
     return (
-        <main className="flex gap-10">
-            <div className="flex flex-col w-[300px] gap-3">
+        <main className="grid grid-cols-flow place-items-center gap-10 md:flex md:flex-row md:place-items-start">
+            <div className="flex flex-col gap-3 w-full md:w-[300px]">
                 <Image
-                    className="rounded-md"
+                    className="rounded-md w-auto"
                     src={coverUrl}
                     width={300}
                     height={400}

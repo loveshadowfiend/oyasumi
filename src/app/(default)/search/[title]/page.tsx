@@ -7,11 +7,10 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { fetchMangaByTitle } from "@/api/manga";
+import Markdown from "react-markdown";
 
 export default function SearchResults() {
     const params = useParams<{ title: string }>();
-
-    // const { updateFetchSubmit } = useSearchStore();
 
     const { data: searchData, isLoading } = useQuery({
         enabled: !!params.title,
@@ -79,14 +78,14 @@ export default function SearchResults() {
                                     <h3 className="text-2xl font-semibold">
                                         {mangaTitle}
                                     </h3>
-                                    <p className="text-justify">
+                                    <Markdown>
                                         {manga.attributes.description.en ??
                                             manga.attributes.description[
                                                 Object.keys(
                                                     manga.attributes.description
                                                 )[0]
                                             ]}
-                                    </p>
+                                    </Markdown>
                                 </div>
                             </Link>
                         );

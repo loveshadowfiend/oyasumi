@@ -34,7 +34,7 @@ export function ChapterSettingsForm() {
         resolver: zodResolver(FormSchema),
     });
 
-    const { theme, updateTheme } = useSettingsStore();
+    const theme = localStorage.getItem("theme") ?? "system";
     const { isProgressActive, toggleIsProgressActive } =
         useChapterSettingsStore();
     const { setTheme } = useTheme();

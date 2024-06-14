@@ -21,7 +21,7 @@ export default function Header({ className }: ComponentProps<"div">) {
     return (
         <header
             className={cn(
-                "flex flex-row items-center justify-between h-[100px] mb-5 px-[20px] border-b-[0.5px] md:px-[40px] lg:px-[100px]",
+                "flex flex-row items-center justify-between h-[100px] mb-5 px-[20px] border-b-[0.5px] lg:px-[100px]",
                 className
             )}
         >

@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPopularNewTitles } from "@/api/manga";
+import Markdown from "react-markdown";
 
 export default function PopularNewTitles() {
     const { data, isLoading } = useQuery({
@@ -70,10 +71,12 @@ export default function PopularNewTitles() {
                                                     {mangaTitle}
                                                 </p>
                                                 <p className="text-sm">
-                                                    {
-                                                        manga.attributes
-                                                            .description.en
-                                                    }
+                                                    <Markdown>
+                                                        {
+                                                            manga.attributes
+                                                                .description.en
+                                                        }
+                                                    </Markdown>
                                                 </p>
                                             </div>
                                         </div>
