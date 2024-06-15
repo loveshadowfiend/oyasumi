@@ -11,6 +11,7 @@ interface LatestMangaStore {
         coverURL: string
     ) => void;
     updateLatestPage: (mangaID: string, pathname: string) => void;
+    clear: () => void;
 }
 
 type manga = {
@@ -20,18 +21,20 @@ type manga = {
     coverURL: string;
 };
 
+const emptyMangaList = [
+    {
+        mangaID: "",
+        pathname: "",
+        mangaTitle: "",
+        coverURL: "",
+    },
+];
+
 const useLatestMangaStore = create<LatestMangaStore>()(
     devtools(
         persist(
             (set, get) => ({
-                latestMangas: [
-                    {
-                        mangaID: "",
-                        pathname: "",
-                        mangaTitle: "",
-                        coverURL: "",
-                    },
-                ],
+                latestMangas: emptyMangaList,
 
                 updateLatestMangas: (
                     mangaID: string,
@@ -64,6 +67,18 @@ const useLatestMangaStore = create<LatestMangaStore>()(
 
                         return manga;
                     });
+
+                    set({ latestMangas: _latestMangas });
+                },
+
+                clear: () => {
+                    set({ latestMangas: emptyMangaList });
+                },
+
+                deleteManga: (mangaID: string) => {
+                    let _latestMangas = get().latestMangas.filter(
+                        (manga) => manga.mangaID === mangaID
+                    );
 
                     set({ latestMangas: _latestMangas });
                 },

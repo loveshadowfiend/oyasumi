@@ -39,7 +39,7 @@ export default function SearchResults() {
     if (!searchData.data.length) {
         return (
             <div className="w-full flex items-center justify-center italic pt-3">
-                No Manga Found :( Try to Submit Another Title
+                Ничего не найдено по вашему запросу
             </div>
         );
     }
@@ -51,6 +51,8 @@ export default function SearchResults() {
                     searchData.data.map((manga, index) => {
                         const mangaId = manga.id;
                         const mangaTitle =
+                            manga.attributes.title.ru ??
+                            manga.attributes.title.en ??
                             manga.attributes.title[
                                 Object.keys(manga.attributes.title)[0]
                             ];
@@ -65,21 +67,22 @@ export default function SearchResults() {
                             <Link
                                 key={index}
                                 href={`/manga/${mangaId}`}
-                                className="flex p-3 gap-5"
+                                className="flex p-3 gap-5 max-h-[400px]"
                             >
                                 <Image
-                                    className="hidden rounded-md min-w-[256px] md:inline"
+                                    className="object-cover max-h-[400px] hidden rounded-md min-w-[256px] md:inline"
                                     src={coverUrl}
                                     alt={`${mangaTitle} cover`}
                                     width={256}
-                                    height={360}
+                                    height={400}
                                 ></Image>
                                 <div className="flex flex-col gap-3">
                                     <h3 className="text-2xl font-semibold">
                                         {mangaTitle}
                                     </h3>
-                                    <Markdown>
-                                        {manga.attributes.description.en ??
+                                    <Markdown className="overflow-auto">
+                                        {manga.attributes.description.ru ??
+                                            manga.attributes.description.en ??
                                             manga.attributes.description[
                                                 Object.keys(
                                                     manga.attributes.description

@@ -22,6 +22,7 @@ import {
 import useSettingsStore from "@/stores/settingsStore";
 import { LANGUAGES } from "@/constants/languages";
 import { useTheme } from "next-themes";
+import { THEMES } from "@/constants/themes";
 
 const FormSchema = z.object({
     theme: z.string(),
@@ -45,7 +46,7 @@ export function SettingsForm() {
                     name="theme"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Theme</FormLabel>
+                            <FormLabel>Тема</FormLabel>
                             <Select
                                 onValueChange={(selectedTheme: string) => {
                                     setTheme(selectedTheme);
@@ -55,20 +56,18 @@ export function SettingsForm() {
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue
-                                            placeholder={
-                                                // capitalize
-                                                theme.charAt(0).toUpperCase() +
-                                                theme.slice(1)
-                                            }
+                                            placeholder={THEMES.get(theme)}
                                         />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                     <SelectItem value="system">
-                                        System
+                                        Системная
                                     </SelectItem>
-                                    <SelectItem value="light">Light</SelectItem>
-                                    <SelectItem value="dark">Dark</SelectItem>
+                                    <SelectItem value="light">
+                                        Светлая
+                                    </SelectItem>
+                                    <SelectItem value="dark">Темная</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormDescription></FormDescription>
@@ -81,7 +80,7 @@ export function SettingsForm() {
                     name="translatedLanguage"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Translated Language for Manga</FormLabel>
+                            <FormLabel>Язык перевода манги</FormLabel>
                             <Select
                                 onValueChange={(selectedLanguage) => {
                                     localStorage.setItem(
@@ -107,8 +106,10 @@ export function SettingsForm() {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="en">English</SelectItem>
-                                    <SelectItem value="ru">Russian</SelectItem>
+                                    <SelectItem value="en">
+                                        Английский
+                                    </SelectItem>
+                                    <SelectItem value="ru">Русский</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormDescription></FormDescription>

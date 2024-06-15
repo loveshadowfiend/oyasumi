@@ -13,8 +13,7 @@ interface SearchProps extends ComponentProps<"div"> {
 
 export const SearchInput = (props: SearchProps) => {
     const router = useRouter();
-    const { fetchSubmit, updateFetchSubmit, toggleDialog, isDialogOpen } =
-        useSearchStore();
+    const { fetchSubmit, updateFetchSubmit, toggleDialog } = useSearchStore();
 
     useEffect(() => {
         if (!fetchSubmit) return;
@@ -41,7 +40,7 @@ export const SearchInput = (props: SearchProps) => {
                 input.value = "";
             }}
         >
-            <Input className="w-full" placeholder="search" />
+            <Input className="w-full" placeholder="Поиск" />
         </form>
     );
 };

@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { fetchFeed } from "@/api/feed";
 import { Skeleton } from "../ui/skeleton";
 import useSettingsStore from "@/stores/settingsStore";
+import { LANGUAGES } from "@/constants/languages";
 
 interface ChaptersFeedProps {
     mangaID: string;
@@ -82,9 +83,11 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
             const element = {
                 id: chapter.id,
                 attributes: {
+                    volume: chapter.attributes.volume,
                     chapter: chapter.attributes.chapter,
                     translatedLanguage: chapter.attributes.translatedLanguage,
                     pages: chapter.attributes.pages,
+                    title: chapter.attributes.title,
                 },
             };
 
@@ -103,7 +106,8 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
     if (!feedData.data.length) {
         return (
             <div className="w-full flex items-center justify-center italic pt-3">
-                No Chapters Found :( Try Changing Language in Settings
+                Глав не найдено :( Попробуйте изменить язык перевода в
+                настройках
             </div>
         );
     }
@@ -124,9 +128,9 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
                                 }
                             }}
                         >
-                            Chapter <ArrowUpDown size={16} className="pl-1" />
+                            Глава <ArrowUpDown size={16} className="pl-1" />
                         </TableHead>
-                        <TableHead>Language</TableHead>
+                        <TableHead>Язык</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableCaption>
@@ -145,6 +149,13 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
 
                             chapters.add(chapter.attributes.chapter);
 
+                            const chapterVolume = chapter.attributes.volume
+                                ? `Том ${chapter.attributes.volume} `
+                                : "";
+                            const chapterTitle = chapter.attributes.title
+                                ? `— ${chapter.attributes.title}`
+                                : "";
+
                             return (
                                 <TableRow
                                     key={index}
@@ -153,8 +164,14 @@ export const ChaptersFeed = (props: ChaptersFeedProps) => {
                                         router.push(`/chapter/${chapter.id}/1`);
                                     }}
                                 >
-                                    <TableCell className="w-full">{`Chapter ${chapter.attributes.chapter}`}</TableCell>
-                                    <TableCell className="text-center">{`${chapter.attributes.translatedLanguage}`}</TableCell>
+                                    <TableCell className="w-full">
+                                        {chapterVolume}
+                                        {`Глава ${chapter.attributes.chapter}
+                                    ${chapterTitle}`}
+                                    </TableCell>
+                                    <TableCell className="text-center">{`${LANGUAGES.get(
+                                        chapter.attributes.translatedLanguage
+                                    )}`}</TableCell>
                                 </TableRow>
                             );
                         })}

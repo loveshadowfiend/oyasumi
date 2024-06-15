@@ -35,7 +35,7 @@ export const ChapterHeader = (props: React.ComponentProps<"div">) => {
                         {mangaTitle}
                     </Link>
                     <span className="hidden pl-[20px] text-sm md:inline">
-                        Chapter {chapterNumber}
+                        Глава {chapterNumber}
                     </span>
                 </div>
                 <div />
@@ -52,7 +52,7 @@ export const ChapterHeader = (props: React.ComponentProps<"div">) => {
                         </DialogTrigger>
                         <DialogContent className="w-[80vw]">
                             <DialogHeader>
-                                <DialogTitle>Settings</DialogTitle>
+                                <DialogTitle>Настройки</DialogTitle>
                                 <div className="w-full pt-4">
                                     <ChapterSettingsForm />
                                 </div>

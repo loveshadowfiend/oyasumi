@@ -45,6 +45,7 @@ export default function PopularNewTitles() {
                         data.data.map((manga, index) => {
                             const mangaId = manga.id;
                             const mangaTitle =
+                                manga.attributes.title.ru ??
                                 manga.attributes.title.en ??
                                 manga.attributes.title["ja-ro"] ??
                                 manga.attributes.title.ja;
@@ -66,16 +67,16 @@ export default function PopularNewTitles() {
                                                 width={imageWidth}
                                                 height={imageHeight}
                                             />
-                                            <div className="flex flex-col gap-3">
+                                            <div className="flex flex-col gap-3 max-h-[355px] overflow-auto">
                                                 <p className="text-4xl font-semibold">
                                                     {mangaTitle}
                                                 </p>
                                                 <p className="text-sm">
                                                     <Markdown>
-                                                        {
+                                                        {manga.attributes
+                                                            .description.ru ??
                                                             manga.attributes
-                                                                .description.en
-                                                        }
+                                                                .description.en}
                                                     </Markdown>
                                                 </p>
                                             </div>

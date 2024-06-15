@@ -51,7 +51,7 @@ export default function Header({ className }: ComponentProps<"div">) {
                     </DialogTrigger>
                     <DialogContent className="w-[80vw]">
                         <DialogHeader>
-                            <DialogTitle>Settings</DialogTitle>
+                            <DialogTitle>Настройки</DialogTitle>
                             <div className="w-full pt-4">
                                 <SettingsForm />
                             </div>

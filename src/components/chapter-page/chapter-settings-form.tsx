@@ -23,6 +23,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import useSettingsStore from "@/stores/settingsStore";
 import useChapterSettingsStore from "@/stores/chapterSettingsStore";
 import { useTheme } from "next-themes";
+import { Switch } from "@/components/ui/switch";
+import { THEMES } from "@/constants/themes";
 
 const FormSchema = z.object({
     isProgressActive: z.boolean(),
@@ -46,11 +48,11 @@ export function ChapterSettingsForm() {
                     control={form.control}
                     name="isProgressActive"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Show progress bar</FormLabel>
+                        <FormItem className="flex items-center h-full">
+                            <FormLabel>Показывать прогресс чтения</FormLabel>
                             <FormControl>
-                                <Checkbox
-                                    className="ml-3"
+                                <Switch
+                                    className="ml-3 !mt-0"
                                     defaultChecked={isProgressActive}
                                     onClick={() => {
                                         toggleIsProgressActive();
@@ -67,7 +69,7 @@ export function ChapterSettingsForm() {
                     name="theme"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Theme</FormLabel>
+                            <FormLabel>Тема</FormLabel>
                             <Select
                                 onValueChange={(selectedTheme: string) => {
                                     setTheme(selectedTheme);
@@ -77,11 +79,7 @@ export function ChapterSettingsForm() {
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue
-                                            placeholder={
-                                                // capitalize
-                                                theme.charAt(0).toUpperCase() +
-                                                theme.slice(1)
-                                            }
+                                            placeholder={THEMES.get(theme)}
                                         />
                                     </SelectTrigger>
                                 </FormControl>

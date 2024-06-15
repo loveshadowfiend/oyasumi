@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChaptersFeed } from "@/components/manga-page/chapters-feed";
 import type { Metadata, ResolvingMetadata } from "next";
-import { AddToLibraryButton } from "@/components/manga-page/add-to-library-button";
+import { ReadingButton } from "@/components/manga-page/reading-button";
 import Markdown from "react-markdown";
 
 type Props = {
@@ -20,6 +20,7 @@ export async function generateMetadata(
 
     return {
         title:
+            manga.data.attributes.title.ru ??
             manga.data.attributes.title.en ??
             manga.data.attributes.title.ja ??
             manga.data.attributes.title["ja-ro"] ??
@@ -27,6 +28,7 @@ export async function generateMetadata(
                 Object.keys(manga.data.attributes.title)[0]
             ],
         description:
+            manga.data.attributes.description.ru ??
             manga.data.attributes.description.en ??
             manga.data.attributes.description.ja ??
             manga.data.attributes.description["ja-ro"] ??
@@ -68,17 +70,17 @@ export default async function MangaPage({
                     height={400}
                     alt={`${mangaData.data.attributes.title.en}`}
                 />
-                <AddToLibraryButton />
+                <ReadingButton mangaID={params.id} />
                 <Card>
                     <CardContent className="flex flex-col gap-3 p-3 text-sm">
                         <div>
-                            <p>Year</p>
+                            <p>Год</p>
                             <p className="capitalize">
                                 {mangaData.data.attributes.year}
                             </p>
                         </div>
                         <div>
-                            <p className="">Status</p>
+                            <p className="">Статус</p>
                             <p className="capitalize">
                                 {mangaData.data.attributes.status}
                             </p>
@@ -89,7 +91,8 @@ export default async function MangaPage({
             <div className="flex flex-col w-full gap-3">
                 <div className="flex min-h-[36px] w-full items-center justify-between">
                     <h2 className="text-4xl font-bold">
-                        {mangaData.data.attributes.title.en ??
+                        {mangaData.data.attributes.title.ru ??
+                            mangaData.data.attributes.title.en ??
                             mangaData.data.attributes.title.ja ??
                             mangaData.data.attributes.title["ja-ro"] ??
                             mangaData.data.attributes.title[
@@ -110,7 +113,8 @@ export default async function MangaPage({
                 </div>
                 <div>
                     <Markdown>
-                        {mangaData.data.attributes.description.en ??
+                        {mangaData.data.attributes.description.ru ??
+                            mangaData.data.attributes.description.en ??
                             mangaData.data.attributes.description.ja ??
                             mangaData.data.attributes.description["ja-ro"] ??
                             mangaData.data.attributes.description[

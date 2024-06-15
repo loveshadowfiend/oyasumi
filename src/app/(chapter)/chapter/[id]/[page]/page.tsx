@@ -370,7 +370,8 @@ export default function ChapterPage({
                                                 atHomeData.chapter.hash;
 
                                             return (
-                                                <Image
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img
                                                     className={cn(
                                                         "h-screen w-auto object-contain",
                                                         {
@@ -381,11 +382,7 @@ export default function ChapterPage({
                                                     src={`${host}/data/${hash}/${filename}`}
                                                     key={index}
                                                     alt={`page ${page + 1}`}
-                                                    width={0}
-                                                    height={0}
                                                     sizes="100vh"
-                                                    priority={true}
-                                                    placeholder="empty"
                                                 />
                                             );
                                         }

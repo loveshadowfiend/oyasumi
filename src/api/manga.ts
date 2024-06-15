@@ -22,7 +22,7 @@ export const fetchMangaByID = async (id: string) => {
 
 export const fetchPopularNewTitles = async () => {
     const response = await fetch(
-        `https://api.mangadex.org/manga?order[followedCount]=desc&limit=10&includes[]=cover_art`
+        `https://api.mangadex.org/manga?order[followedCount]=desc&limit=10&includes[]=cover_art&contentRating[]=safe`
     );
 
     const data = await response.json();
