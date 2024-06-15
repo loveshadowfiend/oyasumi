@@ -19,12 +19,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import useSettingsStore from "@/stores/settingsStore";
 import useChapterSettingsStore from "@/stores/chapterSettingsStore";
 import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
 import { THEMES } from "@/constants/themes";
+import { FIT } from "@/constants/fit";
 
 const FormSchema = z.object({
     isProgressActive: z.boolean(),
@@ -39,8 +38,14 @@ export function ChapterSettingsForm() {
     });
 
     const theme = localStorage.getItem("theme") ?? "system";
-    const { isProgressActive, toggleIsProgressActive, updateFit } =
-        useChapterSettingsStore();
+    const {
+        isProgressActive,
+        fit,
+        containerWidth,
+        toggleIsProgressActive,
+        updateFit,
+        updateContainerWidth,
+    } = useChapterSettingsStore();
     const { setTheme } = useTheme();
 
     return (
@@ -115,7 +120,7 @@ export function ChapterSettingsForm() {
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue
-                                            placeholder={"По высоте экрана"}
+                                            placeholder={FIT.get(fit)}
                                         />
                                     </SelectTrigger>
                                 </FormControl>
@@ -143,13 +148,15 @@ export function ChapterSettingsForm() {
                         <FormItem>
                             <FormLabel>Ширина контейнера</FormLabel>
                             <Select
-                                onValueChange={(selectedTheme: string) => {
-                                    setTheme(selectedTheme);
+                                onValueChange={(containerWidth: string) => {
+                                    updateContainerWidth(containerWidth);
                                 }}
                             >
                                 <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder={"75%"} />
+                                        <SelectValue
+                                            placeholder={containerWidth}
+                                        />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>

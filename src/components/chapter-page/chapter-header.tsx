@@ -27,9 +27,9 @@ export const ChapterHeader = (props: React.ComponentProps<"div">) => {
     return (
         <header className={cn("h-[75px] border-b-[1px]", props.className)}>
             <div className="flex justify-center items-center h-full px-[20px] md:px-[60px] xl:px-[100px]">
-                <div className="flex-1">
+                <div className="flex flex-1 items-center">
                     <Link
-                        className="text-sm font-bold md:text-md"
+                        className="text-sm line-clamp-1 font-bold md:text-md"
                         href={`/manga/${mangaID}`}
                     >
                         {mangaTitle}

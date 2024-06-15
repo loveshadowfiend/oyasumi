@@ -7,6 +7,7 @@ import { ReadingButton } from "@/components/manga-page/reading-button";
 import Markdown from "react-markdown";
 import { getRuTitle } from "@/utils/manga";
 import { ClearHistory } from "@/components/manga-page/clear-history";
+import { STATUS } from "@/constants/manga";
 
 type Props = {
     params: { id: string };
@@ -112,7 +113,8 @@ export default async function MangaPage({
                         <div>
                             <p className="">Статус</p>
                             <p className="capitalize">
-                                {manga.data.attributes.status}
+                                {STATUS.get(manga.data.attributes.status) ??
+                                    manga.data.attributes.status}
                             </p>
                         </div>
                         <div className="pt-3">

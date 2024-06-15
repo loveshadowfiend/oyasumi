@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
-import Image from "next/image";
 import Link from "next/link";
 import { fetchAggregate, fetchAtHome, fetchChapter } from "@/api/chapter";
 import useChapterStore from "@/stores/chapterStore";
@@ -30,6 +29,8 @@ export default function ChapterPage({
         updateNextLink,
         updatePreviousLink,
     } = useChapterStore();
+
+    const { fit, containerWidth } = useChapterSettingsStore();
 
     const { updateLatestPage, updateLatestMangas } = useLatestMangaStore();
     const { isProgressActive } = useChapterSettingsStore();
@@ -272,7 +273,7 @@ export default function ChapterPage({
     if (isLoading)
         return (
             <div className="flex w-screen items-center justify-center">
-                <Skeleton className="h-screen w-[700px]" />
+                <Skeleton className="h-screen w-[40vw]" />
             </div>
         );
 
@@ -300,113 +301,107 @@ export default function ChapterPage({
 
     return (
         <>
-            <ChapterHeader />
-            <main>
-                <div className="max-w-screen min-h-screen" ref={ref}>
-                    {!isLoading && (
-                        <>
-                            <Link
-                                href={previousChapterLink}
-                                className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
-                                onClick={(e) => {
-                                    if (page - 1 < 0 && !aggregateData) return;
-                                    if (page - 1 < 0) return;
-                                    e.preventDefault();
+            <ChapterHeader className="z-50 w-screen" />
+            <main className="h-full w-screen">
+                <div className="relative h-full min-h-screen" ref={ref}>
+                    <Link
+                        href={previousChapterLink}
+                        className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
+                        onClick={(e) => {
+                            if (page - 1 < 0 && !aggregateData) return;
+                            if (page - 1 < 0) return;
+                            e.preventDefault();
 
-                                    setPage(page - 1);
-                                    window.history.replaceState(
-                                        null,
-                                        ``,
-                                        `${page}`
-                                    );
-                                    window.scrollTo({
-                                        top: ref.current.offsetTop,
-                                    });
-                                }}
-                            />
+                            setPage(page - 1);
+                            window.history.replaceState(null, ``, `${page}`);
+                            window.scrollTo({
+                                top: ref.current.offsetTop,
+                            });
+                        }}
+                    />
+                    <Link
+                        href={nextChapterLink}
+                        className="absolute h-full w-[50%] cursor-pointer z-1 left-[50%]"
+                        onClick={(e) => {
+                            if (
+                                page + 1 > atHomeData.chapter.data.length - 1 &&
+                                !aggregateData
+                            )
+                                return;
+                            if (page + 1 > atHomeData.chapter.data.length - 1)
+                                return;
+                            e.preventDefault();
 
-                            <Link
-                                href={nextChapterLink}
-                                className="absolute h-full w-[50%] cursor-pointer z-1 left-[50%]"
-                                onClick={(e) => {
-                                    if (
-                                        page + 1 >
-                                            atHomeData.chapter.data.length -
-                                                1 &&
-                                        !aggregateData
-                                    )
-                                        return;
-                                    if (
-                                        page + 1 >
-                                        atHomeData.chapter.data.length - 1
-                                    )
-                                        return;
-                                    e.preventDefault();
+                            setPage(page + 1);
+                            window.history.replaceState(
+                                null,
+                                ``,
+                                `${page + 2}`
+                            );
+                            window.scrollTo({
+                                top: ref.current.offsetTop,
+                            });
+                        }}
+                    />
 
-                                    setPage(page + 1);
-                                    window.history.replaceState(
-                                        null,
-                                        ``,
-                                        `${page + 2}`
-                                    );
-                                    window.scrollTo({
-                                        top: ref.current.offsetTop,
-                                    });
-                                }}
-                            />
-
-                            <div
-                                className={cn(
-                                    "fixed inset-x-0 max-w-max mx-auto bottom-2",
-                                    { hidden: !isProgressActive }
-                                )}
-                            >
-                                <Progress
-                                    value={
-                                        atHomeData !== undefined
-                                            ? ((page + 1) * 100) /
-                                              atHomeData.chapter.data.length
-                                            : 0
-                                    }
-                                    className={cn(
-                                        "w-[95vw] h-[5px] transition-opacity ease-in-out delay-50 duration-300",
-                                        {
-                                            "opacity-0": isProgressHidden,
-                                            "opacity-100": !isProgressHidden,
-                                        }
-                                    )}
-                                />
-                            </div>
-
-                            {atHomeData !== undefined && (
-                                <div className="flex items-center justify-center w-full">
-                                    {atHomeData.chapter.data.map(
-                                        (filename, index) => {
-                                            const host = atHomeData.baseUrl;
-                                            const hash =
-                                                atHomeData.chapter.hash;
-
-                                            return (
-                                                // eslint-disable-next-line @next/next/no-img-element
-                                                <img
-                                                    className={cn(
-                                                        "h-screen w-auto object-contain",
-                                                        {
-                                                            "visually-hidden":
-                                                                index !== page,
-                                                        }
-                                                    )}
-                                                    src={`${host}/data/${hash}/${filename}`}
-                                                    key={index}
-                                                    alt={`page ${page + 1}`}
-                                                    sizes="100vh"
-                                                />
-                                            );
-                                        }
-                                    )}
-                                </div>
+                    <div
+                        className={cn(
+                            "fixed inset-x-0 max-w-max mx-auto bottom-2",
+                            { hidden: !isProgressActive }
+                        )}
+                    >
+                        <Progress
+                            value={
+                                atHomeData !== undefined
+                                    ? ((page + 1) * 100) /
+                                      atHomeData.chapter.data.length
+                                    : 0
+                            }
+                            className={cn(
+                                "w-[95vw] h-[5px] transition-opacity ease-in-out delay-50 duration-300",
+                                {
+                                    "opacity-0": isProgressHidden,
+                                    "opacity-100": !isProgressHidden,
+                                }
                             )}
-                        </>
+                        />
+                    </div>
+
+                    {atHomeData !== undefined && (
+                        <div
+                            className={cn(
+                                `flex items-center justify-center w-full`
+                            )}
+                        >
+                            {atHomeData.chapter.data.map((filename, index) => {
+                                const host = atHomeData.baseUrl;
+                                const hash = atHomeData.chapter.hash;
+
+                                const widthProperty =
+                                    fit === "width"
+                                        ? `w-[${containerWidth}]`
+                                        : "";
+
+                                return (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        className={cn(
+                                            `object-contain ${widthProperty}`,
+                                            {
+                                                "visually-hidden":
+                                                    index !== page,
+                                                "h-screen": fit === "height",
+                                            }
+                                        )}
+                                        src={`${host}/data/${hash}/${filename}`}
+                                        key={index}
+                                        alt={`page ${page + 1}`}
+                                        sizes="100vh"
+                                        loading="lazy"
+                                    />
+                                );
+                            })}
+                        </div>
                     )}
                 </div>
             </main>
