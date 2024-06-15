@@ -2,7 +2,7 @@ import { getSixMonthAgo } from "@/utils/dates";
 
 export const fetchMangaByTitle = async (title: string) => {
     const response = await fetch(
-        `https://api.mangadex.org/manga?title=${title}&includes[]=cover_art&order[relevance]=desc`
+        `/api/manga?title=${title}&includes[]=cover_art&order[relevance]=desc`
     );
 
     const data = await response.json();
@@ -11,9 +11,7 @@ export const fetchMangaByTitle = async (title: string) => {
 };
 
 export const fetchMangaByID = async (id: string) => {
-    const response = await fetch(
-        `https://api.mangadex.org/manga/${id}?includes[]=cover_art`
-    );
+    const response = await fetch(`/api/manga/${id}?includes[]=cover_art`);
 
     const data = await response.json();
 
@@ -22,7 +20,7 @@ export const fetchMangaByID = async (id: string) => {
 
 export const fetchPopularNewTitles = async () => {
     const response = await fetch(
-        `https://api.mangadex.org/manga?order[followedCount]=desc&limit=10&includes[]=cover_art&contentRating[]=safe`
+        `/api/manga?order[followedCount]=desc&limit=10&includes[]=cover_art&contentRating[]=safe`
     );
 
     const data = await response.json();
@@ -32,7 +30,7 @@ export const fetchPopularNewTitles = async () => {
 
 export const fetchRecentlyUpdated = async () => {
     const response = await fetch(
-        `https://api.mangadex.org/manga?order[createdAt]=desc&limit=6&includes[]=cover_art&contentRating[]=safe`
+        `/api/manga?order[createdAt]=desc&limit=6&includes[]=cover_art&contentRating[]=safe`
     );
     const data = await response.json();
 
