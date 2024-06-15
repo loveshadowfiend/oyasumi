@@ -13,7 +13,7 @@ const useSettingsStore = create<SettingsStore>()(
     persist(
         (set) => ({
             theme: "system",
-            translatedLanguage: ["en"],
+            translatedLanguage: ["ru"],
 
             updateTheme: (theme: string) => {
                 set({ theme: theme });

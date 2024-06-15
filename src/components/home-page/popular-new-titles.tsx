@@ -15,6 +15,7 @@ import { Skeleton } from "../ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPopularNewTitles } from "@/api/manga";
 import Markdown from "react-markdown";
+import { getRuTitle } from "@/utils/manga";
 
 export default function PopularNewTitles() {
     const { data, isLoading } = useQuery({
@@ -44,11 +45,20 @@ export default function PopularNewTitles() {
                     {!isLoading &&
                         data.data.map((manga, index) => {
                             const mangaId = manga.id;
-                            const mangaTitle =
-                                manga.attributes.title.ru ??
-                                manga.attributes.title.en ??
-                                manga.attributes.title["ja-ro"] ??
-                                manga.attributes.title.ja;
+                            let mangaTitle = getRuTitle(
+                                manga.attributes.altTitles
+                            );
+
+                            if (mangaTitle === undefined) {
+                                mangaTitle =
+                                    manga.attributes.title.en ??
+                                    manga.attributes.title.ja ??
+                                    manga.attributes.title["ja-ro"] ??
+                                    manga.attributes.title[
+                                        Object.keys(manga.attributes.title)[0]
+                                    ];
+                            }
+
                             const coverFileName = manga.relationships.filter(
                                 (rel: { type: string }) => {
                                     return rel.type == "cover_art";

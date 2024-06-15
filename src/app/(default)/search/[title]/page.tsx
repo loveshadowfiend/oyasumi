@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { fetchMangaByTitle } from "@/api/manga";
 import Markdown from "react-markdown";
+import { getRuTitle } from "@/utils/manga";
 
 export default function SearchResults() {
     const params = useParams<{ title: string }>();
@@ -50,12 +51,17 @@ export default function SearchResults() {
                 {searchData !== undefined &&
                     searchData.data.map((manga, index) => {
                         const mangaId = manga.id;
-                        const mangaTitle =
-                            manga.attributes.title.ru ??
-                            manga.attributes.title.en ??
-                            manga.attributes.title[
-                                Object.keys(manga.attributes.title)[0]
-                            ];
+                        let mangaTitle = getRuTitle(manga.attributes.altTitles);
+
+                        if (mangaTitle === undefined) {
+                            mangaTitle =
+                                manga.attributes.title.en ??
+                                manga.attributes.title.ja ??
+                                manga.attributes.title["ja-ro"] ??
+                                manga.attributes.title[
+                                    Object.keys(manga.data.attributes.title)[0]
+                                ];
+                        }
                         const coverFileName = manga.relationships.filter(
                             (rel: { type: string }) => {
                                 return rel.type == "cover_art";

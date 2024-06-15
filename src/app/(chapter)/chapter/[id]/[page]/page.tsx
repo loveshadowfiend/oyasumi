@@ -15,6 +15,7 @@ import useLatestMangaStore from "@/stores/latestMangaStore";
 import useChapterSettingsStore from "@/stores/chapterSettingsStore";
 import { fetchMangaByID } from "@/api/manga";
 import { Button } from "@/components/ui/button";
+import { getRuTitle } from "@/utils/manga";
 
 export default function ChapterPage({
     params,
@@ -132,9 +133,21 @@ export default function ChapterPage({
             }
         )[0];
 
+        let mangaTitle = getRuTitle(_manga.attributes.altTitles);
+
+        if (mangaTitle === undefined) {
+            mangaTitle =
+                _manga.attributes.title.en ??
+                _manga.attributes.title.ja ??
+                _manga.attributes.title["ja-ro"] ??
+                _manga.attributes.title[
+                    Object.keys(mangaData.data.attributes.title)[0]
+                ];
+        }
+
         updateChapter(
             _manga.id,
-            _manga.attributes.title[Object.keys(_manga.attributes.title)[0]],
+            mangaTitle,
             chapterData.data.attributes.chapter
         );
 
@@ -220,13 +233,17 @@ export default function ChapterPage({
 
         const coverUrl = `https://uploads.mangadex.org/covers/${mangaData.data.id}/${coverFileName}.512.jpg`;
 
-        const mangaTitle =
-            mangaData.data.attributes.title.en ??
-            mangaData.data.attributes.title.ja ??
-            mangaData.data.attributes.title["ja-ro"] ??
-            mangaData.data.attributes.title[
-                Object.keys(mangaData.data.attributes.title)[0]
-            ];
+        let mangaTitle = getRuTitle(mangaData.data.attributes.altTitles);
+
+        if (mangaTitle === undefined) {
+            mangaTitle =
+                mangaData.data.attributes.title.en ??
+                mangaData.data.attributes.title.ja ??
+                mangaData.data.attributes.title["ja-ro"] ??
+                mangaData.data.attributes.title[
+                    Object.keys(mangaData.data.attributes.title)[0]
+                ];
+        }
 
         updateLatestMangas(mangaID, pathname, mangaTitle, coverUrl);
     }, [isLoading, mangaData]);

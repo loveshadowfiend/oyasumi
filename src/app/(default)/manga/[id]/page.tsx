@@ -5,6 +5,8 @@ import { ChaptersFeed } from "@/components/manga-page/chapters-feed";
 import type { Metadata, ResolvingMetadata } from "next";
 import { ReadingButton } from "@/components/manga-page/reading-button";
 import Markdown from "react-markdown";
+import { getRuTitle } from "@/utils/manga";
+import { ClearHistory } from "@/components/manga-page/clear-history";
 
 type Props = {
     params: { id: string };
@@ -18,23 +20,30 @@ export async function generateMetadata(
         `https://api.mangadex.org/manga/${params.id}?includes[]=cover_art`
     ).then((res) => res.json());
 
-    return {
-        title:
-            manga.data.attributes.title.ru ??
+    let mangaTitle = getRuTitle(manga.data.attributes.altTitles);
+
+    if (mangaTitle === undefined) {
+        mangaTitle =
             manga.data.attributes.title.en ??
             manga.data.attributes.title.ja ??
             manga.data.attributes.title["ja-ro"] ??
             manga.data.attributes.title[
                 Object.keys(manga.data.attributes.title)[0]
-            ],
-        description:
-            manga.data.attributes.description.ru ??
-            manga.data.attributes.description.en ??
-            manga.data.attributes.description.ja ??
-            manga.data.attributes.description["ja-ro"] ??
-            manga.data.attributes.description[
-                Object.keys(manga.data.attributes.description)[0]
-            ],
+            ];
+    }
+
+    const mangaDescription =
+        manga.data.attributes.description.ru ??
+        manga.data.attributes.description.en ??
+        manga.data.attributes.description.ja ??
+        manga.data.attributes.description["ja-ro"] ??
+        manga.data.attributes.description[
+            Object.keys(manga.data.attributes.description)[0]
+        ];
+
+    return {
+        title: mangaTitle,
+        description: mangaDescription,
     };
 }
 
@@ -43,16 +52,37 @@ export default async function MangaPage({
 }: {
     params: { id: string };
 }) {
-    const mangaData = await fetch(
+    const manga = await fetch(
         `https://api.mangadex.org/manga/${params.id}?includes[]=cover_art`
     ).then((res) => res.json());
 
+    let mangaTitle = getRuTitle(manga.data.attributes.altTitles);
+
+    if (mangaTitle === undefined) {
+        mangaTitle =
+            manga.data.attributes.title.en ??
+            manga.data.attributes.title.ja ??
+            manga.data.attributes.title["ja-ro"] ??
+            manga.data.attributes.title[
+                Object.keys(manga.data.attributes.title)[0]
+            ];
+    }
+
+    const mangaDescription =
+        manga.data.attributes.description.ru ??
+        manga.data.attributes.description.en ??
+        manga.data.attributes.description.ja ??
+        manga.data.attributes.description["ja-ro"] ??
+        manga.data.attributes.description[
+            Object.keys(manga.data.attributes.description)[0]
+        ];
+
     const coverFileName =
-        mangaData.data.relationships.filter((rel: { type: string }) => {
+        manga.data.relationships.filter((rel: { type: string }) => {
             return rel.type == "cover_art";
         })[0].attributes?.fileName ?? "";
 
-    const coverUrl = `https://uploads.mangadex.org/covers/${mangaData.data.id}/${coverFileName}.512.jpg`;
+    const coverURL = `https://uploads.mangadex.org/covers/${manga.data.id}/${coverFileName}.512.jpg`;
 
     const statisticsResponse = await fetch(
         `https://api.mangadex.org/statistics/manga/${params.id}`
@@ -65,10 +95,10 @@ export default async function MangaPage({
             <div className="flex flex-col gap-3 w-full md:w-[300px]">
                 <Image
                     className="rounded-md w-auto"
-                    src={coverUrl}
+                    src={coverURL}
                     width={300}
                     height={400}
-                    alt={`${mangaData.data.attributes.title.en}`}
+                    alt={`${mangaTitle} cover`}
                 />
                 <ReadingButton mangaID={params.id} />
                 <Card>
@@ -76,29 +106,24 @@ export default async function MangaPage({
                         <div>
                             <p>Год</p>
                             <p className="capitalize">
-                                {mangaData.data.attributes.year}
+                                {manga.data.attributes.year}
                             </p>
                         </div>
                         <div>
                             <p className="">Статус</p>
                             <p className="capitalize">
-                                {mangaData.data.attributes.status}
+                                {manga.data.attributes.status}
                             </p>
+                        </div>
+                        <div className="pt-3">
+                            <ClearHistory mangaID={params.id} />
                         </div>
                     </CardContent>
                 </Card>
             </div>
             <div className="flex flex-col w-full gap-3">
                 <div className="flex min-h-[36px] w-full items-center justify-between">
-                    <h2 className="text-4xl font-bold">
-                        {mangaData.data.attributes.title.ru ??
-                            mangaData.data.attributes.title.en ??
-                            mangaData.data.attributes.title.ja ??
-                            mangaData.data.attributes.title["ja-ro"] ??
-                            mangaData.data.attributes.title[
-                                Object.keys(mangaData.data.attributes.title)[0]
-                            ]}
-                    </h2>
+                    <h2 className="text-4xl font-bold">{mangaTitle}</h2>
                     <div className="flex gap-1 items-center">
                         <Star />
                         <p className="font-semibold text-lg">
@@ -112,15 +137,7 @@ export default async function MangaPage({
                     </div>
                 </div>
                 <div>
-                    <Markdown>
-                        {mangaData.data.attributes.description.ru ??
-                            mangaData.data.attributes.description.en ??
-                            mangaData.data.attributes.description.ja ??
-                            mangaData.data.attributes.description["ja-ro"] ??
-                            mangaData.data.attributes.description[
-                                Object.keys(mangaData.data.attributes.title)[0]
-                            ]}
-                    </Markdown>
+                    <Markdown>{mangaDescription}</Markdown>
                 </div>
                 <div>
                     <ChaptersFeed mangaID={params.id} />

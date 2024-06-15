@@ -29,6 +29,8 @@ import { THEMES } from "@/constants/themes";
 const FormSchema = z.object({
     isProgressActive: z.boolean(),
     theme: z.string(),
+    fit: z.string(),
+    containerWidth: z.number(),
 });
 
 export function ChapterSettingsForm() {
@@ -37,7 +39,7 @@ export function ChapterSettingsForm() {
     });
 
     const theme = localStorage.getItem("theme") ?? "system";
-    const { isProgressActive, toggleIsProgressActive } =
+    const { isProgressActive, toggleIsProgressActive, updateFit } =
         useChapterSettingsStore();
     const { setTheme } = useTheme();
 
@@ -48,7 +50,7 @@ export function ChapterSettingsForm() {
                     control={form.control}
                     name="isProgressActive"
                     render={({ field }) => (
-                        <FormItem className="flex items-center h-full">
+                        <FormItem className="flex items-center justify-start h-full">
                             <FormLabel>Показывать прогресс чтения</FormLabel>
                             <FormControl>
                                 <Switch
@@ -85,10 +87,75 @@ export function ChapterSettingsForm() {
                                 </FormControl>
                                 <SelectContent>
                                     <SelectItem value="system">
-                                        System
+                                        Системная
                                     </SelectItem>
-                                    <SelectItem value="light">Light</SelectItem>
-                                    <SelectItem value="dark">Dark</SelectItem>
+                                    <SelectItem value="light">
+                                        Светлая
+                                    </SelectItem>
+                                    <SelectItem value="dark">Темная</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormDescription></FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="fit"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Выравнивание страницы</FormLabel>
+                            <Select
+                                onValueChange={(fit: string) => {
+                                    updateFit(fit);
+                                }}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue
+                                            placeholder={"По высоте экрана"}
+                                        />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="width">
+                                        По ширине контейнера
+                                    </SelectItem>
+                                    <SelectItem value="height">
+                                        По высоте экрана
+                                    </SelectItem>
+                                    <SelectItem value="none">
+                                        Без выравнивания
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormDescription></FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="containerWidth"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Ширина контейнера</FormLabel>
+                            <Select
+                                onValueChange={(selectedTheme: string) => {
+                                    setTheme(selectedTheme);
+                                }}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder={"75%"} />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="50%">50%</SelectItem>
+                                    <SelectItem value="75%">75%</SelectItem>
+                                    <SelectItem value="100%">100%</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormDescription></FormDescription>

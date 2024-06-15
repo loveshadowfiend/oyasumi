@@ -1,59 +1,60 @@
+"use client";
+
 import { fetchRecentlyUpdated } from "@/api/manga";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { getRuTitle } from "@/utils/manga";
 
-export default async function RecentlyUpdated() {
-    // const { data, isLoading } = useQuery({
-    //     queryKey: ["recentlyUpdated"],
-    //     queryFn: () => fetchRecentlyUpdated(),
-    // });
+export default function RecentlyUpdated() {
+    const { data, isLoading } = useQuery({
+        queryKey: ["recentlyUpdated"],
+        queryFn: () => fetchRecentlyUpdated(),
+    });
 
-    const data = await fetchRecentlyUpdated();
-
-    // if (isLoading) {
-    //     return (
-    //         <div>
-    //             <h3 className="font-semibold text-lg pb-3">
-    //                 Обновлено недавно
-    //             </h3>
-    //             <ScrollArea className="w-full whitespace-nowrap">
-    //                 <div
-    //                     className="flex w-max space-x-4 pb-3
-    //                             xl:grid xl:grid-cols-6 xl:gap-3 xl:w-full"
-    //                 >
-    //                     <div className="flex flex-col gap-2">
-    //                         <Skeleton className="w-auto h-[300px]" />
-    //                         <Skeleton className="w-full h-[20px]" />
-    //                     </div>
-    //                     <div className="flex flex-col gap-2">
-    //                         <Skeleton className="w-auto h-[300px]" />
-    //                         <Skeleton className="w-full h-[20px]" />
-    //                     </div>
-    //                     <div className="flex flex-col gap-2">
-    //                         <Skeleton className="w-auto h-[300px]" />
-    //                         <Skeleton className="w-full h-[20px]" />
-    //                     </div>
-    //                     <div className="flex flex-col gap-2">
-    //                         <Skeleton className="w-auto h-[300px]" />
-    //                         <Skeleton className="w-full h-[20px]" />
-    //                     </div>
-    //                     <div className="flex flex-col gap-2">
-    //                         <Skeleton className="w-auto h-[300px]" />
-    //                         <Skeleton className="w-full h-[20px]" />
-    //                     </div>
-    //                     <div className="flex flex-col gap-2">
-    //                         <Skeleton className="w-auto h-[300px]" />
-    //                         <Skeleton className="w-full h-[20px]" />
-    //                     </div>
-    //                 </div>
-    //                 <ScrollBar orientation="horizontal" />
-    //             </ScrollArea>
-    //         </div>
-    //     );
-    // }
+    if (isLoading) {
+        return (
+            <div>
+                <h3 className="font-semibold text-lg pb-3">
+                    Обновлено недавно
+                </h3>
+                <ScrollArea className="w-full whitespace-nowrap">
+                    <div
+                        className="flex w-max space-x-4 pb-3
+                                xl:grid xl:grid-cols-6 xl:gap-3 xl:w-full"
+                    >
+                        <div className="flex flex-col gap-2">
+                            <Skeleton className="w-auto h-[300px]" />
+                            <Skeleton className="w-full h-[20px]" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <Skeleton className="w-auto h-[300px]" />
+                            <Skeleton className="w-full h-[20px]" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <Skeleton className="w-auto h-[300px]" />
+                            <Skeleton className="w-full h-[20px]" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <Skeleton className="w-auto h-[300px]" />
+                            <Skeleton className="w-full h-[20px]" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <Skeleton className="w-auto h-[300px]" />
+                            <Skeleton className="w-full h-[20px]" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <Skeleton className="w-auto h-[300px]" />
+                            <Skeleton className="w-full h-[20px]" />
+                        </div>
+                    </div>
+                    <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -65,11 +66,19 @@ export default async function RecentlyUpdated() {
                 >
                     {data.data.map((manga, index) => {
                         const mangaId = manga.id;
-                        const mangaTitle =
-                            manga.attributes.title.ru ??
-                            manga.attributes.title.en ??
-                            manga.attributes.title["ja-ro"] ??
-                            manga.attributes.title.ja;
+
+                        let mangaTitle = getRuTitle(manga.attributes.altTitles);
+
+                        if (mangaTitle === undefined) {
+                            mangaTitle =
+                                manga.attributes.title.en ??
+                                manga.attributes.title.ja ??
+                                manga.attributes.title["ja-ro"] ??
+                                manga.attributes.title[
+                                    Object.keys(manga.attributes.title)[0]
+                                ];
+                        }
+
                         const coverFileName = manga.relationships.filter(
                             (rel: { type: string }) => {
                                 return rel.type == "cover_art";

@@ -4,13 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import useLatestMangaStore from "@/stores/latestMangaStore";
-import { Delete, X } from "lucide-react";
-import { Button } from "../ui/button";
+import { X } from "lucide-react";
+import { useState } from "react";
 
 export default function RecentReads() {
-    const { latestMangas, clear } = useLatestMangaStore();
+    const { latestMangas, clear, deleteManga } = useLatestMangaStore();
+    const [isHoveringOverlay, setIsHoveringOverlay] = useState<boolean>(false);
 
-    if (latestMangas.length <= 1) return;
+    if (latestMangas.length <= 0) return;
 
     return (
         <div>
@@ -46,6 +47,11 @@ export default function RecentReads() {
                                     className="w-[200px] xl:w-auto"
                                     key={index}
                                     href={`/manga/${manga.mangaID}`}
+                                    onClick={(e) => {
+                                        if (isHoveringOverlay) {
+                                            e.preventDefault();
+                                        }
+                                    }}
                                 >
                                     <div className="flex flex-col gap-1 break-normal">
                                         <div className="relative flex-1 w-auto h-[300px]">
@@ -56,9 +62,26 @@ export default function RecentReads() {
                                                 width={200}
                                                 height={300}
                                             />
-                                            <div className="opacity-0 hover:opacity-100 absolute bg-black/30 top-0 h-full w-full rounded-md z-1">
-                                                <div className="h-full flex items-end justify-center z-50"></div>
-                                                <X className="absolute top-1 right-1" />
+                                            <div className="opacity-0 active:opacity-100 hover:opacity-100 absolute bg-black/30 top-0 h-full w-full rounded-md z-1">
+                                                <div className="h-full flex items-end justify-center z-1"></div>
+                                                <X
+                                                    className="absolute top-1 right-1 z-50"
+                                                    onClick={() => {
+                                                        deleteManga(
+                                                            manga.mangaID
+                                                        );
+                                                    }}
+                                                    onMouseEnter={() => {
+                                                        setIsHoveringOverlay(
+                                                            true
+                                                        );
+                                                    }}
+                                                    onMouseLeave={() => {
+                                                        setIsHoveringOverlay(
+                                                            false
+                                                        );
+                                                    }}
+                                                />
                                             </div>
                                         </div>
                                         <p className="text-[14px] font-medium truncate">
