@@ -70,6 +70,9 @@ export default function RecentReads() {
                                                         deleteManga(
                                                             manga.mangaID
                                                         );
+                                                        setIsHoveringOverlay(
+                                                            false
+                                                        );
                                                     }}
                                                     onMouseEnter={() => {
                                                         setIsHoveringOverlay(
