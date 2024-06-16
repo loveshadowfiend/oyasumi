@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 interface SearchProps extends ComponentProps<"div"> {
     isDialog: boolean;
@@ -25,7 +26,7 @@ export const SearchInput = (props: SearchProps) => {
 
     return (
         <form
-            className={cn("w-[300px]", props.className)}
+            className={cn("flex w-[300px] gap-3", props.className)}
             onSubmit={(e) => {
                 e.preventDefault();
 
@@ -41,6 +42,7 @@ export const SearchInput = (props: SearchProps) => {
             }}
         >
             <Input className="w-full" placeholder="Поиск" />
+            <Button className="md:hidden">Найти</Button>
         </form>
     );
 };
