@@ -33,6 +33,8 @@ export const ReadingButton = (props: { mangaID: string }) => {
 
         if (manga.length > 0) {
             setContinueReading(manga[0]);
+        } else {
+            setContinueReading(null);
         }
     }, [latestMangas, props.mangaID]);
 

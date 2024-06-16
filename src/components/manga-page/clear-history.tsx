@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import useLatestMangaStore from "@/stores/latestMangaStore";
 import { useEffect, useState } from "react";
 
@@ -20,12 +19,10 @@ export const ClearHistory = (props: { mangaID: string }) => {
         }
     }, [latestMangas, props.mangaID]);
 
+    if (!isExist) return;
+
     return (
-        <div
-            className={cn("flex w-full items-center justify-center", {
-                block: isExist,
-            })}
-        >
+        <div className={"flex w-full items-center justify-start pt-3"}>
             <p
                 className="text-sm cursor-pointer active:underline hover:underline"
                 onClick={() => deleteManga(props.mangaID)}

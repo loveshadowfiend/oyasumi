@@ -18,7 +18,7 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const manga = await fetch(
-        `/api/manga/${params.id}?includes[]=cover_art`
+        `https://api.mangadex.org/manga/${params.id}?includes[]=cover_art`
     ).then((res) => res.json());
 
     let mangaTitle = getRuTitle(manga.data.attributes.altTitles);
@@ -54,7 +54,7 @@ export default async function MangaPage({
     params: { id: string };
 }) {
     const manga = await fetch(
-        `/api/manga/${params.id}?includes[]=cover_art`
+        `https://api.mangadex.org/manga/${params.id}?includes[]=cover_art`
     ).then((res) => res.json());
 
     let mangaTitle = getRuTitle(manga.data.attributes.altTitles);
@@ -117,7 +117,7 @@ export default async function MangaPage({
                                     manga.data.attributes.status}
                             </p>
                         </div>
-                        <div className="pt-3">
+                        <div>
                             <ClearHistory mangaID={params.id} />
                         </div>
                     </CardContent>

@@ -17,7 +17,7 @@ export const fetchAggregate = async (
     translatedLanguage: string[]
 ) => {
     const response = await fetch(
-        `/api/${mangaID}/aggregate?translatedLanguage[]=${translatedLanguage}`
+        `/api/manga/${mangaID}/aggregate?translatedLanguage[]=${translatedLanguage}`
     );
     const data = await response.json();
 
