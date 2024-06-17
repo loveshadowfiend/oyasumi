@@ -5,7 +5,7 @@ import { ChaptersFeed } from "@/components/manga-page/chapters-feed";
 import type { Metadata, ResolvingMetadata } from "next";
 import { ReadingButton } from "@/components/manga-page/reading-button";
 import Markdown from "react-markdown";
-import { getRuTitle } from "@/utils/manga";
+import { getRuTitle } from "@/lib/utils";
 import { ClearHistory } from "@/components/manga-page/clear-history";
 import { STATUS } from "@/constants/manga";
 

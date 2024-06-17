@@ -9,18 +9,20 @@ import { fetchAggregate, fetchAtHome, fetchChapter } from "@/api/chapter";
 import useChapterStore from "@/stores/chapterStore";
 import { ChapterHeader } from "@/components/chapter-page/chapter-header";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useLatestMangaStore from "@/stores/latestMangaStore";
 import useChapterSettingsStore from "@/stores/chapterSettingsStore";
 import { fetchMangaByID } from "@/api/manga";
 import { Button } from "@/components/ui/button";
-import { getRuTitle } from "@/utils/manga";
+import { getRuTitle } from "@/lib/utils";
 
 export default function ChapterPage({
     params,
 }: {
     params: { id: string; page: number };
 }) {
+    const router = useRouter();
+
     const {
         mangaID,
         nextChapterLink,
@@ -35,7 +37,7 @@ export default function ChapterPage({
     const { updateLatestPage, updateLatestMangas } = useLatestMangaStore();
     const { isProgressActive } = useChapterSettingsStore();
 
-    const [translatedLanguage, setTranslatedLanguage] = useState(["en"]);
+    const [translatedLanguage, setTranslatedLanguage] = useState(["ru"]);
 
     const [page, setPage] = useState<number>(0);
     const [isProgressHidden, setIsProgressHidden] = useState<boolean>(false);
@@ -103,6 +105,18 @@ export default function ChapterPage({
     }, []);
 
     useEffect(() => {
+        if (!atHomeData) return;
+
+        if (params.page - 1 > atHomeData.chapter.data.length) {
+            router.push(
+                `/chapter/${params.id}/${atHomeData.chapter.data.length}`
+            );
+        } else if (params.page - 1 <= 0) {
+            router.push(`/chapter/${params.id}/1`);
+        }
+    }, [atHomeData]);
+
+    useEffect(() => {
         if (isLoading) return;
 
         updateLatestPage(mangaID, pathname);
@@ -113,7 +127,7 @@ export default function ChapterPage({
 
         const timeout = setTimeout(() => {
             setIsProgressHidden(true);
-        }, 1500);
+        }, 4000);
 
         return () => clearTimeout(timeout);
     }, [page]);
@@ -273,7 +287,7 @@ export default function ChapterPage({
     if (isLoading)
         return (
             <div className="flex w-screen items-center justify-center">
-                <Skeleton className="h-screen w-[40vw]" />
+                <Skeleton className="h-screen w-[70vw] md:w-[40vw]" />
             </div>
         );
 
@@ -301,8 +315,8 @@ export default function ChapterPage({
 
     return (
         <>
-            <ChapterHeader className="z-50 w-screen" />
-            <main className="h-full w-screen">
+            <ChapterHeader className="z-50 max-w-screen" />
+            <main className="h-full max-w-screen">
                 <div className="relative h-full min-h-screen" ref={ref}>
                     <Link
                         href={previousChapterLink}
@@ -397,7 +411,6 @@ export default function ChapterPage({
                                         key={index}
                                         alt={`page ${page + 1}`}
                                         sizes="100vh"
-                                        loading="lazy"
                                     />
                                 );
                             })}

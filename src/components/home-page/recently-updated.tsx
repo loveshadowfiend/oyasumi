@@ -6,7 +6,7 @@ import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { getRuTitle } from "@/utils/manga";
+import { getRuTitle } from "@/lib/utils";
 
 export default function RecentlyUpdated() {
     const { data, isLoading } = useQuery({

@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { fetchMangaByTitle } from "@/api/manga";
 import Markdown from "react-markdown";
-import { getRuTitle } from "@/utils/manga";
+import { getRuTitle } from "@/lib/utils";
 
 export default function SearchResults() {
     const params = useParams<{ title: string }>();

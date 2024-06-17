@@ -15,7 +15,7 @@ import { Skeleton } from "../ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPopularNewTitles } from "@/api/manga";
 import Markdown from "react-markdown";
-import { getRuTitle } from "@/utils/manga";
+import { getRuTitle } from "@/lib/utils";
 
 export default function PopularNewTitles() {
     const { data, isLoading } = useQuery({
