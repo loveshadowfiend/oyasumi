@@ -30,7 +30,7 @@ export default function RecentReads() {
             <ScrollArea className="w-full whitespace-nowrap">
                 <div
                     className="flex w-max space-x-4 pb-3
-                                xl:grid xl:grid-cols-6 xl:gap-3 xl:w-full"
+                                xl:grid xl:grid-cols-6 xl:w-full"
                 >
                     {[...latestMangas]
                         .reverse()
