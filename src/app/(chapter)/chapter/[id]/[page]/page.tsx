@@ -127,7 +127,7 @@ export default function ChapterPage({
 
         const timeout = setTimeout(() => {
             setIsProgressHidden(true);
-        }, 4000);
+        }, 1000);
 
         return () => clearTimeout(timeout);
     }, [page]);

@@ -62,7 +62,7 @@ export default function RecentReads() {
                                                 width={200}
                                                 height={300}
                                             />
-                                            <div className="opacity-0 active:opacity-100 hover:opacity-100 absolute bg-black/30 top-0 h-full w-full rounded-md z-1">
+                                            {/* <div className="opacity-0 active:opacity-100 hover:opacity-100 absolute bg-black/30 top-0 h-full w-full rounded-md z-1">
                                                 <div className="h-full flex items-end justify-center z-1"></div>
                                                 <X
                                                     className="absolute top-1 right-1 z-50"
@@ -85,7 +85,7 @@ export default function RecentReads() {
                                                         );
                                                     }}
                                                 />
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <p className="text-[14px] font-medium truncate">
                                             {mangaTitle}
