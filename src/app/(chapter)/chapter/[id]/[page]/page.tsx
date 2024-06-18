@@ -100,9 +100,59 @@ export default function ChapterPage({
         refetchOnWindowFocus: false,
     });
 
+    const prevPage = () => {
+        if (page - 1 < 0) {
+            router.push(previousChapterLink);
+            return;
+        }
+
+        setPage(page - 1);
+        window.history.replaceState(null, ``, `${page}`);
+        window.scrollTo({
+            top: ref.current.offsetTop,
+        });
+    };
+
+    const nextPage = () => {
+        if (page + 1 > atHomeData.chapter.data.length - 1) {
+            router.push(nextChapterLink);
+            return;
+        }
+
+        setPage(page + 1);
+        window.history.replaceState(null, ``, `${page + 2}`);
+        window.scrollTo({
+            top: ref.current.offsetTop,
+        });
+    };
+
     useEffect(() => {
         setPage(params.page - 1);
     }, []);
+
+    useEffect(() => {
+        if (isLoading) return;
+
+        // Function to handle key press
+        const handleKeyPress = (event: KeyboardEvent) => {
+            switch (event.key) {
+                case "ArrowLeft":
+                    prevPage();
+                    break;
+                case "ArrowRight":
+                    nextPage();
+                    break;
+            }
+        };
+
+        // Add event listener on mount
+        window.addEventListener("keydown", handleKeyPress);
+
+        // Remove event listener on unmount
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        };
+    }, [isLoading, nextPage, page, prevPage]);
 
     useEffect(() => {
         if (!atHomeData) return;
@@ -297,14 +347,12 @@ export default function ChapterPage({
                 <ChapterHeader />
                 <div className="w-screen h-[80vh]">
                     <div className="flex flex-col w-full h-full items-center justify-center gap-3">
-                        <p>
-                            This chapter is only available at external website
-                        </p>
+                        <p>Эта глава доступна только на другом сайте</p>
                         <Button>
                             <Link
                                 href={chapterData.data.attributes.externalUrl}
                             >
-                                Take me there!
+                                Перейти
                             </Link>
                         </Button>
                     </div>
@@ -318,43 +366,20 @@ export default function ChapterPage({
             <ChapterHeader className="z-50 max-w-screen" />
             <main className="h-full max-w-screen">
                 <div className="relative h-full min-h-screen" ref={ref}>
-                    <Link
-                        href={previousChapterLink}
+                    <div
                         className="absolute h-full w-[50%] cursor-pointer z-1 left-0"
                         onClick={(e) => {
-                            if (page - 1 < 0 && !aggregateData) return;
-                            if (page - 1 < 0) return;
                             e.preventDefault();
 
-                            setPage(page - 1);
-                            window.history.replaceState(null, ``, `${page}`);
-                            window.scrollTo({
-                                top: ref.current.offsetTop,
-                            });
+                            prevPage();
                         }}
                     />
-                    <Link
-                        href={nextChapterLink}
+                    <div
                         className="absolute h-full w-[50%] cursor-pointer z-1 left-[50%]"
                         onClick={(e) => {
-                            if (
-                                page + 1 > atHomeData.chapter.data.length - 1 &&
-                                !aggregateData
-                            )
-                                return;
-                            if (page + 1 > atHomeData.chapter.data.length - 1)
-                                return;
                             e.preventDefault();
 
-                            setPage(page + 1);
-                            window.history.replaceState(
-                                null,
-                                ``,
-                                `${page + 2}`
-                            );
-                            window.scrollTo({
-                                top: ref.current.offsetTop,
-                            });
+                            nextPage();
                         }}
                     />
 
