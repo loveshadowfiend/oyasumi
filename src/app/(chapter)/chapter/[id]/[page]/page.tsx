@@ -133,7 +133,6 @@ export default function ChapterPage({
     useEffect(() => {
         if (isLoading) return;
 
-        // Function to handle key press
         const handleKeyPress = (event: KeyboardEvent) => {
             switch (event.key) {
                 case "ArrowLeft":
@@ -145,10 +144,8 @@ export default function ChapterPage({
             }
         };
 
-        // Add event listener on mount
         window.addEventListener("keydown", handleKeyPress);
 
-        // Remove event listener on unmount
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
         };
@@ -183,7 +180,7 @@ export default function ChapterPage({
     }, [page]);
 
     useEffect(() => {
-        if (ref === null || ref.current === null) return;
+        if (isLoading || ref.current === null) return;
 
         window.scrollTo({ top: ref.current.offsetTop });
     }, [ref, isLoading]);
@@ -265,27 +262,46 @@ export default function ChapterPage({
         setNextChapterID(next ? next.chapterID : "");
         setPreviousChapterID(prev ? prev.chapterID : "");
 
-        updateNextLink(
-            next ? `/chapter/${next.chapterID}/1` : `/manga/${mangaID}`
-        );
-    }, [aggregate, aggregateIndex, mangaID, updateNextLink]);
+        const nextLink = next
+            ? `/chapter/${next.chapterID}/1`
+            : `/manga/${mangaID}`;
 
-    useEffect(() => {
-        if (previousChapterData !== undefined) {
-            const _previousChapterPages =
-                previousChapterData.data.attributes.pages;
-            setPreviousChapterPages(_previousChapterPages);
+        updateNextLink(nextLink);
+        router.prefetch(nextLink);
 
-            updatePreviousLink(
-                `/chapter/${previousChapterID}/${_previousChapterPages}`
-            );
+        if (prev === undefined) {
+            updatePreviousLink(`/manga/${mangaID}`);
         }
     }, [
-        previousChapterData,
+        aggregate,
+        aggregateIndex,
+        mangaID,
+        router,
+        updateNextLink,
+        updatePreviousLink,
+    ]);
+
+    useEffect(() => {
+        if (!previousChapterData) return;
+
+        console.log("im insaneeee");
+
+        const _previousChapterPages = previousChapterData.data.attributes.pages;
+        setPreviousChapterPages(_previousChapterPages);
+
+        const prevLink = `/chapter/${previousChapterID}/${_previousChapterPages}`;
+
+        updatePreviousLink(prevLink);
+        router.prefetch(prevLink);
+    }, [
+        isLoading,
         nextChapterData,
         nextChapterID,
         previousChapterID,
         updatePreviousLink,
+        mangaID,
+        router,
+        previousChapterData,
     ]);
 
     useEffect(() => {
@@ -311,7 +327,7 @@ export default function ChapterPage({
         }
 
         updateLatestMangas(mangaID, pathname, mangaTitle, coverUrl);
-    }, [isLoading, mangaData]);
+    }, [isLoading, mangaData, mangaID, pathname, updateLatestMangas]);
 
     // toggle loading state
     useEffect(() => {
@@ -432,7 +448,7 @@ export default function ChapterPage({
                                                 "h-screen": fit === "height",
                                             }
                                         )}
-                                        src={`${host}/data/${hash}/${filename}`}
+                                        src={`/api/image?url=${host}/data/${hash}/${filename}`}
                                         key={index}
                                         alt={`page ${page + 1}`}
                                         sizes="100vh"

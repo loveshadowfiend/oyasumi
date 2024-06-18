@@ -66,7 +66,7 @@ export default function SearchResults() {
                                 return rel.type == "cover_art";
                             }
                         )[0].attributes?.fileName;
-                        const coverUrl = `https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}.512.jpg`;
+                        const coverUrl = `/api/image?url=https://uploads.mangadex.org/covers/${mangaId}/${coverFileName}.512.jpg`;
 
                         return (
                             <Link
