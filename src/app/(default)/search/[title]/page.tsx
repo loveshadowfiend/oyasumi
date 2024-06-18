@@ -1,42 +1,21 @@
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { fetchMangaByTitle } from "@/api/manga";
 import Markdown from "react-markdown";
 import { getRuTitle } from "@/lib/utils";
 
-export default function SearchResults() {
-    const params = useParams<{ title: string }>();
+export default async function SearchResults({
+    params,
+}: {
+    params: { title: string };
+}) {
+    const results = await fetch(
+        `https://api.mangadex.org/manga?title=${params.title}&includes[]=cover_art&order[relevance]=desc`
+    ).then((res) => res.json());
 
-    const { data: searchData, isLoading } = useQuery({
-        enabled: !!params.title,
-        queryKey: ["manga", params.title],
-        queryFn: () => fetchMangaByTitle(params.title),
-        refetchOnWindowFocus: false,
-    });
-
-    let skeletons = [];
-    for (let i = 0; i < 10; i++) {
-        skeletons.push(
-            <div className="flex gap-5 p-3">
-                <Skeleton className="hidden min-w-[256px] h-[400px] md:inline" />
-                <div className="flex flex-col gap-3 w-full">
-                    <Skeleton className="w-full h-[24px] md:w-[400px]" />
-                    <Skeleton className="h-[200px] w-[100%]" />
-                </div>
-            </div>
-        );
-    }
-
-    if (isLoading) {
-        return skeletons;
-    }
-
-    if (!searchData.data.length) {
+    if (!results.data.length) {
         return (
             <div className="w-full flex items-center justify-center italic pt-3">
                 Ничего не найдено по вашему запросу
@@ -47,8 +26,8 @@ export default function SearchResults() {
     return (
         <main className="overflow-auto">
             <div className="md:flex md:flex-col gap-3">
-                {searchData !== undefined &&
-                    searchData.data.map((manga, index) => {
+                {results !== undefined &&
+                    results.data.map((manga, index) => {
                         const mangaId = manga.id;
                         let mangaTitle = getRuTitle(manga.attributes.altTitles);
 
