@@ -1,8 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { fetchMangaByTitle } from "@/api/manga";
 import Markdown from "react-markdown";
 import { getRuTitle } from "@/lib/utils";
 

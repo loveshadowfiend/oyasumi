@@ -4,6 +4,10 @@ next.js practice
 
 credits to mangadex
 
+##
+
+live on vercel: https://oyasumi-ten.vercel.app/
+
 ## running locally in dev mode
 
 ```

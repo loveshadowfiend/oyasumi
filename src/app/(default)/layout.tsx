@@ -38,7 +38,7 @@ export default function DefaultLayout({
                             )}
                         >
                             <Header />
-                            <div className="px-[20px] lg:px-[100px]">
+                            <div className="pt-[80px] lg:pt-[100px] px-[20px] lg:px-[100px]">
                                 {children}
                             </div>
                         </div>
