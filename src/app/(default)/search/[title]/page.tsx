@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";

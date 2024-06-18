@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
@@ -100,7 +100,7 @@ export default function ChapterPage({
         refetchOnWindowFocus: false,
     });
 
-    const prevPage = () => {
+    const prevPage = useCallback(() => {
         if (page - 1 < 0) {
             router.push(previousChapterLink);
             return;
@@ -111,9 +111,9 @@ export default function ChapterPage({
         window.scrollTo({
             top: ref.current.offsetTop,
         });
-    };
+    }, [page, previousChapterLink, router]);
 
-    const nextPage = () => {
+    const nextPage = useCallback(() => {
         if (page + 1 > atHomeData.chapter.data.length - 1) {
             router.push(nextChapterLink);
             return;
@@ -124,7 +124,7 @@ export default function ChapterPage({
         window.scrollTo({
             top: ref.current.offsetTop,
         });
-    };
+    }, [atHomeData, nextChapterLink, page, router]);
 
     useEffect(() => {
         setPage(params.page - 1);
