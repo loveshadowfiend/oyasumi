@@ -82,7 +82,7 @@ export default function PopularNewTitles() {
                                                     {mangaTitle}
                                                 </p>
                                                 <p className="text-sm">
-                                                    <Markdown>
+                                                    <Markdown className="markdown">
                                                         {manga.attributes
                                                             .description.ru ??
                                                             manga.attributes

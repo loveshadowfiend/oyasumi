@@ -139,7 +139,7 @@ export default async function MangaPage({
                     </div>
                 </div>
                 <div>
-                    <Markdown>{mangaDescription}</Markdown>
+                    <Markdown className="markdown">{mangaDescription}</Markdown>
                 </div>
                 <div>
                     <ChaptersFeed mangaID={params.id} />
