@@ -61,7 +61,7 @@ export default async function SearchResults({
                                     <h3 className="text-2xl font-semibold">
                                         {mangaTitle}
                                     </h3>
-                                    <Markdown className="overflow-auto">
+                                    <Markdown className="overflow-hidden">
                                         {manga.attributes.description.ru ??
                                             manga.attributes.description.en ??
                                             manga.attributes.description[
