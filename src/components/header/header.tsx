@@ -21,7 +21,7 @@ export default function Header({ className }: ComponentProps<"div">) {
     return (
         <header
             className={cn(
-                "fixed backdrop-blur-md bg-background/80 z-50 w-screen flex flex-row items-center justify-between h-[60px] mb-5 px-[20px] border-b-[0.5px] lg:px-[100px] lg:h-[80px]",
+                "fixed backdrop-blur-md bg-background/95 z-50 w-screen flex flex-row items-center justify-between h-[60px] mb-5 px-[20px] border-b-[0.5px] lg:px-[100px] lg:h-[80px] supports-[backdrop-filter]:bg-background/60",
                 className
             )}
         >
