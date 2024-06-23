@@ -32,7 +32,7 @@ export default function ChapterPage({
         updatePreviousLink,
     } = useChapterStore();
 
-    const { fit, containerWidth } = useChapterSettingsStore();
+    const { fit, containerWidth, server } = useChapterSettingsStore();
 
     const { updateLatestPage, updateLatestMangas } = useLatestMangaStore();
     const { isProgressActive } = useChapterSettingsStore();
@@ -102,7 +102,9 @@ export default function ChapterPage({
 
     const prevPage = useCallback(() => {
         if (page - 1 < 0) {
-            router.push(previousChapterLink);
+            router.push(previousChapterLink, {
+                scroll: false,
+            });
             return;
         }
 
@@ -115,7 +117,9 @@ export default function ChapterPage({
 
     const nextPage = useCallback(() => {
         if (page + 1 > atHomeData.chapter.data.length - 1) {
-            router.push(nextChapterLink);
+            router.push(nextChapterLink, {
+                scroll: false,
+            });
             return;
         }
 
@@ -156,10 +160,15 @@ export default function ChapterPage({
 
         if (params.page - 1 > atHomeData.chapter.data.length) {
             router.push(
-                `/chapter/${params.id}/${atHomeData.chapter.data.length}`
+                `/chapter/${params.id}/${atHomeData.chapter.data.length}`,
+                {
+                    scroll: false,
+                }
             );
         } else if (params.page - 1 <= 0) {
-            router.push(`/chapter/${params.id}/1`);
+            router.push(`/chapter/${params.id}/1`, {
+                scroll: false,
+            });
         }
     }, [atHomeData]);
 
@@ -284,8 +293,6 @@ export default function ChapterPage({
     useEffect(() => {
         if (!previousChapterData) return;
 
-        console.log("im insaneeee");
-
         const _previousChapterPages = previousChapterData.data.attributes.pages;
         setPreviousChapterPages(_previousChapterPages);
 
@@ -353,7 +360,7 @@ export default function ChapterPage({
     if (isLoading)
         return (
             <div className="flex w-screen items-center justify-center">
-                <Skeleton className="h-screen w-[70vw] md:w-[40vw]" />
+                <Skeleton className="h-[80vh] w-screen md:w-[40vw] md:h-screen" />
             </div>
         );
 
@@ -428,33 +435,39 @@ export default function ChapterPage({
                                 `flex items-center justify-center w-full`
                             )}
                         >
-                            {atHomeData.chapter.data.map((filename, index) => {
-                                const host = atHomeData.baseUrl;
-                                const hash = atHomeData.chapter.hash;
+                            {atHomeData.chapter[server].map(
+                                (filename, index) => {
+                                    const host = atHomeData.baseUrl;
+                                    const hash = atHomeData.chapter.hash;
 
-                                const widthProperty =
-                                    fit === "width"
-                                        ? `w-[${containerWidth}]`
-                                        : "";
+                                    const widthProperty =
+                                        fit === "width"
+                                            ? `w-[${containerWidth}]`
+                                            : "";
 
-                                return (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img
-                                        className={cn(
-                                            `object-contain ${widthProperty}`,
-                                            {
-                                                "visually-hidden":
-                                                    index !== page,
-                                                "h-screen": fit === "height",
-                                            }
-                                        )}
-                                        src={`/api/image?url=${host}/data/${hash}/${filename}`}
-                                        key={index}
-                                        alt={`page ${page + 1}`}
-                                        sizes="100vh"
-                                    />
-                                );
-                            })}
+                                    return (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
+                                            className={cn(
+                                                `object-contain ${widthProperty}`,
+                                                {
+                                                    "visually-hidden":
+                                                        index !== page,
+                                                    "h-screen":
+                                                        fit === "height",
+                                                }
+                                            )}
+                                            src={`/api/image?url=${host}/${
+                                                server === "data"
+                                                    ? "data"
+                                                    : "data-saver"
+                                            }/${hash}/${filename}`}
+                                            key={index}
+                                            alt={`page ${page + 1}`}
+                                        />
+                                    );
+                                }
+                            )}
                         </div>
                     )}
                 </div>

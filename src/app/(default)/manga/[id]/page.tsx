@@ -7,7 +7,7 @@ import { ReadingButton } from "@/components/manga-page/reading-button";
 import Markdown from "react-markdown";
 import { getRuTitle } from "@/lib/utils";
 import { ClearHistory } from "@/components/manga-page/clear-history";
-import { STATUS } from "@/constants/manga";
+import { STATUS } from "@/constants/settings/manga";
 
 type Props = {
     params: { id: string };

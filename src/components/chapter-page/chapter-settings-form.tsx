@@ -22,11 +22,14 @@ import {
 import useChapterSettingsStore from "@/stores/chapterSettingsStore";
 import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
-import { THEMES } from "@/constants/themes";
-import { FIT } from "@/constants/fit";
+import { THEMES } from "@/constants/settings/themes";
+import { FIT } from "@/constants/settings/fit";
+import { SERVERS } from "@/constants/settings/server";
+import { cn } from "@/lib/utils";
 
 const FormSchema = z.object({
     isProgressActive: z.boolean(),
+    server: z.string(),
     theme: z.string(),
     fit: z.string(),
     containerWidth: z.number(),
@@ -42,9 +45,11 @@ export function ChapterSettingsForm() {
         isProgressActive,
         fit,
         containerWidth,
+        server,
         toggleIsProgressActive,
         updateFit,
         updateContainerWidth,
+        updateServer,
     } = useChapterSettingsStore();
     const { setTheme } = useTheme();
 
@@ -68,6 +73,39 @@ export function ChapterSettingsForm() {
                             </FormControl>
                             <FormMessage />
                             <FormDescription></FormDescription>
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="server"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Сервер</FormLabel>
+                            <Select
+                                onValueChange={(server: string) => {
+                                    updateServer(server);
+                                }}
+                                defaultValue={field.value}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue
+                                            placeholder={SERVERS.get(server)}
+                                        />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="data">
+                                        Обычный
+                                    </SelectItem>
+                                    <SelectItem value="dataSaver">
+                                        Сжатие
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormDescription></FormDescription>
+                            <FormMessage />
                         </FormItem>
                     )}
                 />
@@ -145,7 +183,7 @@ export function ChapterSettingsForm() {
                     control={form.control}
                     name="containerWidth"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className={cn({ hidden: fit !== "width" })}>
                             <FormLabel>Ширина контейнера</FormLabel>
                             <Select
                                 onValueChange={(containerWidth: string) => {

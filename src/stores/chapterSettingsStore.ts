@@ -5,10 +5,12 @@ interface ChapterSettingsStore {
     isProgressActive: boolean;
     fit: string;
     containerWidth: string;
+    server: string;
 
     toggleIsProgressActive: () => void;
     updateFit: (fit: string) => void;
     updateContainerWidth: (containerWidth: string) => void;
+    updateServer: (server: string) => void;
 }
 
 const useChapterSettingsStore = create<ChapterSettingsStore>()(
@@ -17,6 +19,7 @@ const useChapterSettingsStore = create<ChapterSettingsStore>()(
             isProgressActive: true,
             fit: "height",
             containerWidth: "75%",
+            server: "dataSaver",
 
             toggleIsProgressActive: () => {
                 set((state) => ({ isProgressActive: !state.isProgressActive }));
@@ -26,6 +29,9 @@ const useChapterSettingsStore = create<ChapterSettingsStore>()(
             },
             updateContainerWidth: (containerWidth: string) => {
                 set({ containerWidth: containerWidth });
+            },
+            updateServer: (server: string) => {
+                set({ server: server });
             },
         }),
         {

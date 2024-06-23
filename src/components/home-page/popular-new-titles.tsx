@@ -10,7 +10,6 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { useState, useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPopularNewTitles } from "@/api/manga";
@@ -77,7 +76,7 @@ export default function PopularNewTitles() {
                                                 width={imageWidth}
                                                 height={imageHeight}
                                             />
-                                            <div className="flex flex-col gap-3 max-h-[355px] overflow-auto">
+                                            <div className="flex flex-col gap-3 max-h-[355px] overflow-clip">
                                                 <p className="text-4xl font-semibold">
                                                     {mangaTitle}
                                                 </p>

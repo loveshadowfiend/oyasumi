@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { fetchFeed } from "@/api/feed";
 import { Skeleton } from "../ui/skeleton";
 import useSettingsStore from "@/stores/settingsStore";
-import { LANGUAGES } from "@/constants/languages";
+import { LANGUAGES } from "@/constants/settings/languages";
 
 interface ChaptersFeedProps {
     mangaID: string;

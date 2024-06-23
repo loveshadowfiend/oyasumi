@@ -20,9 +20,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import useSettingsStore from "@/stores/settingsStore";
-import { LANGUAGES } from "@/constants/languages";
+import { LANGUAGES } from "@/constants/settings/languages";
 import { useTheme } from "next-themes";
-import { THEMES } from "@/constants/themes";
+import { THEMES } from "@/constants/settings/themes";
 
 const FormSchema = z.object({
     theme: z.string(),

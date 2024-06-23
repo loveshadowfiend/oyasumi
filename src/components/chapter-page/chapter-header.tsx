@@ -40,10 +40,10 @@ export const ChapterHeader = (props: React.ComponentProps<"div">) => {
                 </div>
                 <div />
                 <div className="flex justify-center items-center gap-3">
-                    <Link href={previousChapterLink}>
+                    <Link href={previousChapterLink} scroll={false}>
                         <ArrowLeft />
                     </Link>
-                    <Link href={nextChapterLink}>
+                    <Link href={nextChapterLink} scroll={false}>
                         <ArrowRight />
                     </Link>
                     <Dialog>
