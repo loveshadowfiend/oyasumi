@@ -1,14 +1,12 @@
 # oyasumi
 
-next.js practice
+Manga reading project for Next.js practice that uses MangaDex API
 
-credits to mangadex
+## Live demo
 
-##
+Live on vercel: https://oyasumi-ten.vercel.app/
 
-live on vercel: https://oyasumi-ten.vercel.app/
-
-## running locally in dev mode
+## Running locally in dev mode
 
 ```
 git clone https://github.com/loveshadowfiend/oyasumi
@@ -16,3 +14,11 @@ cd oyasumi
 npm install
 npm run dev
 ```
+
+## Technology stack
+
+-   Next.js
+-   TailwindCSS
+-   shadcn
+-   TanStack Query
+-   zustand
