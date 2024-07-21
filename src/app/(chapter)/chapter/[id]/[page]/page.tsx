@@ -321,7 +321,7 @@ export default function ChapterPage({
 
         const coverUrl = `https://uploads.mangadex.org/covers/${mangaData.data.id}/${coverFileName}.512.jpg`;
 
-        let mangaTitle = getRuTitle(mangaData.data.attributes.altTitles);
+        let mangaTitle = getRuTitle(mangaData.data.attributes.altTitles) ?? "";
 
         if (mangaTitle === undefined) {
             mangaTitle =
@@ -436,7 +436,7 @@ export default function ChapterPage({
                             )}
                         >
                             {atHomeData.chapter[server].map(
-                                (filename, index) => {
+                                (filename: string, index: number) => {
                                     const host = atHomeData.baseUrl;
                                     const hash = atHomeData.chapter.hash;
 

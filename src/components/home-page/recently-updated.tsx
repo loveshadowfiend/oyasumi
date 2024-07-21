@@ -101,10 +101,7 @@ export default function RecentlyUpdated() {
                                         height={300}
                                     />
                                     <p className="text-[14px] font-medium truncate">
-                                        {`${mangaTitle.substr(0, 40)}` +
-                                            (mangaTitle.length > 40
-                                                ? "..."
-                                                : "")}
+                                        {mangaTitle}
                                     </p>
                                 </div>
                             </Link>

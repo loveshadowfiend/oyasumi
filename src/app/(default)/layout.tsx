@@ -37,8 +37,8 @@ export default function DefaultLayout({
                                 fontSans.variable
                             )}
                         >
-                            <Header />
-                            <div className="pt-[80px] lg:pt-[100px] px-[20px] lg:px-[100px]">
+                            <Header className="2xl:px-[200px]" />
+                            <div className="pt-[80px] lg:pt-[100px] px-[20px] lg:px-[100px] 2xl:px-[200px]">
                                 {children}
                             </div>
                         </div>
