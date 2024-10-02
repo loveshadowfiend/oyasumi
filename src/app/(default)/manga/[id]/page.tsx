@@ -1,22 +1,17 @@
 import { Star } from "lucide-react";
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
 import { ChaptersFeed } from "@/components/manga-page/chapters-feed";
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import { ReadingButton } from "@/components/manga-page/reading-button";
 import Markdown from "react-markdown";
 import { getRuTitle } from "@/lib/utils";
-import { ClearHistory } from "@/components/manga-page/clear-history";
-import { STATUS } from "@/constants/settings/manga";
+import { MangaInfo } from "@/components/manga-page/manga-info";
 
 type Props = {
     params: { id: string };
 };
 
-export async function generateMetadata(
-    { params }: Props,
-    parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const manga = await fetch(
         `https://api.mangadex.org/manga/${params.id}?includes[]=cover_art`
     ).then((res) => res.json());
@@ -102,26 +97,7 @@ export default async function MangaPage({
                     alt={`${mangaTitle} cover`}
                 />
                 <ReadingButton mangaID={params.id} />
-                <Card>
-                    <CardContent className="flex flex-col gap-3 p-3 text-sm">
-                        <div>
-                            <p>Год</p>
-                            <p className="capitalize">
-                                {manga.data.attributes.year}
-                            </p>
-                        </div>
-                        <div>
-                            <p className="">Статус</p>
-                            <p className="capitalize">
-                                {STATUS.get(manga.data.attributes.status) ??
-                                    manga.data.attributes.status}
-                            </p>
-                        </div>
-                        <div>
-                            <ClearHistory mangaID={params.id} />
-                        </div>
-                    </CardContent>
-                </Card>
+                <MangaInfo manga={manga} />
             </div>
             <div className="flex flex-col w-full gap-3">
                 <div className="flex min-h-[36px] w-full items-center justify-between">

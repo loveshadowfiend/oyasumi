@@ -51,7 +51,7 @@ export default function ChapterPage({
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    const ref = useRef(null);
+    const ref = useRef<HTMLElement>(null);
 
     const pathname = usePathname();
 
